@@ -115,13 +115,20 @@ button:hover {
 function createHeart() {
   const heart = document.createElement("div");
   heart.classList.add("heart");
-  heart.innerHTML = "❤️";
+
+  const hearts = ["❤️","💖","💗","💘"];
+  heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+
   heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (18 + Math.random() * 12) + "px";
   heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 8000);
 }
-setInterval(createHeart, 1200);
+
+setInterval(createHeart, 900);
+
 
 function enter() {
 

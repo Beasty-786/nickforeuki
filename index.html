@@ -106,9 +106,9 @@ button:hover {
   <div class="footer">Long distance. Same heart. 🤍</div>
 </div>
 
-<!-- Romantic background music -->
-<audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b1f6b6b3b.mp3?filename=romantic-background-11209.mp3" type="audio/mpeg">
+<!-- Local hosted romantic audio -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="romantic.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -127,16 +127,17 @@ function createHeart() {
 }
 setInterval(createHeart, 900);
 
-/* Touch sparkle hearts */
-document.addEventListener("click", function(e) {
+/* Touch sparkle hearts (mobile safe) */
+function createSparkle(x, y) {
   const sparkle = document.createElement("div");
   sparkle.innerHTML = "❤️";
-  sparkle.style.position = "absolute";
-  sparkle.style.left = e.pageX + "px";
-  sparkle.style.top = e.pageY + "px";
-  sparkle.style.fontSize = "22px";
+  sparkle.style.position = "fixed";
+  sparkle.style.left = x + "px";
+  sparkle.style.top = y + "px";
+  sparkle.style.fontSize = "24px";
   sparkle.style.pointerEvents = "none";
   sparkle.style.transition = "all 0.8s ease";
+  sparkle.style.zIndex = "9999";
   document.body.appendChild(sparkle);
 
   setTimeout(() => {
@@ -145,44 +146,49 @@ document.addEventListener("click", function(e) {
   }, 10);
 
   setTimeout(() => sparkle.remove(), 800);
+}
+
+document.addEventListener("touchstart", function(e) {
+  const touch = e.touches[0];
+  createSparkle(touch.clientX, touch.clientY);
+});
+
+document.addEventListener("click", function(e) {
+  createSparkle(e.clientX, e.clientY);
 });
 
 /* Main enter function */
 function enter() {
 
-  document.getElementById("bgMusic").play();
+  const music = document.getElementById("bgMusic");
+  music.volume = 0.7;
+  music.play();
 
   const today = new Date();
   const month = today.getMonth() + 1;
   const date = today.getDate();
 
   const days = {
-
     7: {
       title: "Reassurance 🤍",
       msg: "I’m here. Steady. No confusion. You don’t have to question where I stand."
     },
-
     9: {
       title: "Appreciation 🌸",
       msg: "I value your patience. I value your effort. I value how you care."
     },
-
     11: {
       title: "Effort 🎁",
       msg: "Today is action. Something small. Something real."
     },
-
     12: {
       title: "Peace 🕊",
       msg: "No arguments. No tension. Just calm."
     },
-
     14: {
       title: "Connection ❤️",
       msg: "Midnight call. 11:11. I’m choosing you."
     }
-
   };
 
   let title = "Our Week ❤️";

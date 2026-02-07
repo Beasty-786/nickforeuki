@@ -16,19 +16,24 @@ body {
   text-align: center;
   color: white;
   overflow: hidden;
-  background: linear-gradient(-45deg,#ff4e50,#ff758c,#ff7eb3,#ff9671);
-  background-size: 400% 400%;
-  animation: gradientMove 12s ease infinite;
+  position: relative;
 }
 
-@keyframes gradientMove {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
+/* Blurred couple background */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('bg.JPG.jpeg') no-repeat center center/cover;
+  filter: blur(18px) brightness(0.55);
+  z-index: -1;
 }
 
 .card {
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.45);
   padding: 35px;
   border-radius: 20px;
   max-width: 480px;
@@ -73,7 +78,7 @@ button:hover {
   to {opacity: 1; transform: translateY(0);}
 }
 
-/* floating hearts */
+/* Floating hearts */
 .heart {
   position: absolute;
   bottom: -20px;
@@ -106,7 +111,7 @@ button:hover {
   <div class="footer">Long distance. Same heart. 🤍</div>
 </div>
 
-<!-- Local hosted romantic audio -->
+<!-- Local romantic audio (must be uploaded to repo) -->
 <audio id="bgMusic" loop preload="auto">
   <source src="romantic.mp3" type="audio/mpeg">
 </audio>
@@ -127,7 +132,7 @@ function createHeart() {
 }
 setInterval(createHeart, 900);
 
-/* Touch sparkle hearts (mobile safe) */
+/* Touch sparkle effect */
 function createSparkle(x, y) {
   const sparkle = document.createElement("div");
   sparkle.innerHTML = "❤️";
@@ -157,7 +162,7 @@ document.addEventListener("click", function(e) {
   createSparkle(e.clientX, e.clientY);
 });
 
-/* Main enter function */
+/* Enter button logic */
 function enter() {
 
   const music = document.getElementById("bgMusic");

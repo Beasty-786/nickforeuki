@@ -16,9 +16,9 @@ body {
   text-align: center;
   color: white;
   overflow: hidden;
-  background: linear-gradient(-45deg, #ff758c, #ff7eb3, #ff9671, #ffc75f);
+  background: linear-gradient(-45deg,#ff4e50,#ff758c,#ff7eb3,#ff9671);
   background-size: 400% 400%;
-  animation: gradientMove 10s ease infinite;
+  animation: gradientMove 12s ease infinite;
 }
 
 @keyframes gradientMove {
@@ -32,8 +32,8 @@ body {
   padding: 35px;
   border-radius: 20px;
   max-width: 480px;
+  backdrop-filter: blur(12px);
   animation: fadeIn 1s ease;
-  backdrop-filter: blur(10px);
 }
 
 h1 {
@@ -47,7 +47,7 @@ p {
 }
 
 button {
-  margin-top: 20px;
+  margin-top: 12px;
   padding: 10px 22px;
   border-radius: 25px;
   border: none;
@@ -59,11 +59,11 @@ button {
 }
 
 button:hover {
-  transform: scale(1.05);
+  transform: scale(1.07);
 }
 
 .footer {
-  margin-top: 15px;
+  margin-top: 18px;
   font-size: 13px;
   opacity: 0.85;
 }
@@ -77,9 +77,8 @@ button:hover {
 .heart {
   position: absolute;
   bottom: -20px;
-  font-size: 20px;
   animation: floatUp 8s linear infinite;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 @keyframes floatUp {
@@ -93,7 +92,6 @@ button:hover {
 
 <div class="card" id="screen">
   <h1>Doing This Our Way ❤️</h1>
-
   <p>
     Everyone is posting roses 🌹 and chocolate reels 🍫<br><br>
     I don’t want copy-paste love.<br><br>
@@ -108,29 +106,51 @@ button:hover {
   <div class="footer">Long distance. Same heart. 🤍</div>
 </div>
 
+<!-- Romantic background music -->
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b1f6b6b3b.mp3?filename=romantic-background-11209.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 
-
-/* floating hearts generator */
+/* Floating red hearts */
 function createHeart() {
   const heart = document.createElement("div");
   heart.classList.add("heart");
-
   const hearts = ["❤️","💖","💗","💘"];
   heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
-
   heart.style.left = Math.random() * 100 + "vw";
   heart.style.fontSize = (18 + Math.random() * 12) + "px";
   heart.style.animationDuration = (6 + Math.random() * 4) + "s";
-
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 8000);
 }
-
 setInterval(createHeart, 900);
 
+/* Touch sparkle hearts */
+document.addEventListener("click", function(e) {
+  const sparkle = document.createElement("div");
+  sparkle.innerHTML = "❤️";
+  sparkle.style.position = "absolute";
+  sparkle.style.left = e.pageX + "px";
+  sparkle.style.top = e.pageY + "px";
+  sparkle.style.fontSize = "22px";
+  sparkle.style.pointerEvents = "none";
+  sparkle.style.transition = "all 0.8s ease";
+  document.body.appendChild(sparkle);
 
+  setTimeout(() => {
+    sparkle.style.transform = "translateY(-40px)";
+    sparkle.style.opacity = "0";
+  }, 10);
+
+  setTimeout(() => sparkle.remove(), 800);
+});
+
+/* Main enter function */
 function enter() {
+
+  document.getElementById("bgMusic").play();
 
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -150,12 +170,12 @@ function enter() {
 
     11: {
       title: "Effort 🎁",
-      msg: "Today is action. Something small. Something real. Not just words."
+      msg: "Today is action. Something small. Something real."
     },
 
     12: {
       title: "Peace 🕊",
-      msg: "No arguments today. No tension. Just calm energy."
+      msg: "No arguments. No tension. Just calm."
     },
 
     14: {
@@ -165,7 +185,7 @@ function enter() {
 
   };
 
-  let title = "Our Week 💛";
+  let title = "Our Week ❤️";
   let message = "This space updates on special days.";
 
   if (month === 2 && days[date]) {
@@ -178,6 +198,7 @@ function enter() {
     "<p>" + message + "</p>" +
     "<div class='footer'>11:11 🤍</div>";
 }
+
 </script>
 
 </body>

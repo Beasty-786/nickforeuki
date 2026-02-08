@@ -19,7 +19,7 @@ body {
   position: relative;
 }
 
-/* Blurred background image */
+/* Blurred background */
 body::before {
   content: "";
   position: fixed;
@@ -40,15 +40,8 @@ body::before {
   backdrop-filter: blur(10px);
 }
 
-h1 {
-  margin-bottom: 15px;
-  font-size: 22px;
-}
-
-p {
-  line-height: 1.6;
-  font-size: 16px;
-}
+h1 { margin-bottom: 15px; font-size: 22px; }
+p { line-height: 1.6; font-size: 16px; }
 
 button {
   margin-top: 12px;
@@ -62,9 +55,7 @@ button {
   transition: 0.3s;
 }
 
-button:hover {
-  transform: scale(1.07);
-}
+button:hover { transform: scale(1.07); }
 
 .footer {
   margin-top: 18px;
@@ -93,7 +84,7 @@ button:hover {
   <h1>Doing This Our Way ❤️</h1>
   <p>
     Everyone is posting roses 🌹 and chocolate reels 🍫<br><br>
-    I don’t want copy-paste love.<br><br>
+    I don’t want copy love.<br><br>
     I want something that feels like us.
   </p>
 
@@ -105,14 +96,13 @@ button:hover {
   <div class="footer">Long distance. Same heart. 🤍</div>
 </div>
 
-<!-- Local music -->
 <audio id="bgMusic" loop preload="auto">
   <source src="romantic.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-/* Floating red hearts */
+/* Floating hearts */
 function createHeart() {
   const heart = document.createElement("div");
   heart.classList.add("heart");
@@ -127,36 +117,57 @@ function createHeart() {
 setInterval(createHeart, 900);
 
 /* Touch sparkle */
-function createSparkle(x, y) {
-  const sparkle = document.createElement("div");
-  sparkle.innerHTML = "❤️";
-  sparkle.style.position = "fixed";
-  sparkle.style.left = x + "px";
-  sparkle.style.top = y + "px";
-  sparkle.style.fontSize = "24px";
-  sparkle.style.pointerEvents = "none";
-  sparkle.style.transition = "all 0.8s ease";
-  sparkle.style.zIndex = "9999";
-  document.body.appendChild(sparkle);
-
+function sparkle(x, y) {
+  const s = document.createElement("div");
+  s.innerHTML = "❤️";
+  s.style.position = "fixed";
+  s.style.left = x + "px";
+  s.style.top = y + "px";
+  s.style.fontSize = "24px";
+  s.style.pointerEvents = "none";
+  s.style.transition = "all 0.8s ease";
+  s.style.zIndex = "9999";
+  document.body.appendChild(s);
   setTimeout(() => {
-    sparkle.style.transform = "translateY(-40px)";
-    sparkle.style.opacity = "0";
+    s.style.transform = "translateY(-40px)";
+    s.style.opacity = "0";
   }, 10);
-
-  setTimeout(() => sparkle.remove(), 800);
+  setTimeout(() => s.remove(), 800);
 }
 
-document.addEventListener("touchstart", function(e) {
-  const touch = e.touches[0];
-  createSparkle(touch.clientX, touch.clientY);
+document.addEventListener("touchstart", e => {
+  const t = e.touches[0];
+  sparkle(t.clientX, t.clientY);
 });
 
-document.addEventListener("click", function(e) {
-  createSparkle(e.clientX, e.clientY);
+document.addEventListener("click", e => {
+  sparkle(e.clientX, e.clientY);
 });
 
-/* Enter function */
+/* Reveal function */
+function revealGif(id) {
+  document.getElementById(id).style.display = "flex";
+}
+
+/* Sentence formatter */
+function formatLines(text) {
+  return text.split(". ").join(".<br><br>");
+}
+
+/* Helper to build each day */
+function buildDay(title, text, gifFile) {
+  const id = gifFile.replace(".gif","") + "Reveal";
+  return {
+    title: title,
+    msg: formatLines(text) + "<br><br>" +
+    "<button onclick=\"revealGif('" + id + "')\">Show Me ❤️</button>" +
+    "<div id='" + id + "' style='margin-top:15px; display:none; justify-content:center;'>" +
+    "<img src='" + gifFile + "' style='width:85%; max-width:260px; border-radius:15px;'>" +
+    "</div>"
+  };
+}
+
+/* Enter */
 function enter() {
 
   const music = document.getElementById("bgMusic");
@@ -169,91 +180,68 @@ function enter() {
 
   const days = {
 
-    7: {
-      title: "Reassurance 🤍",
-      msg: "I’m here. Steady. No confusion.<br><br>\
-      <div style='display:flex; justify-content:center; margin-top:15px;'>\
-      <img src='reassurance.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
-      </div>"
-    },
+    7: buildDay(
+      "Reassurance 🤍",
+      "You overthink sometimes. I know that. But I am not leaving. Even when we fight.",
+      "reassurance.gif"
+    ),
 
-    8: {
-      title: "Consistency 🧱",
-      msg: "Nothing dramatic. Just consistency.<br><br>\
-      <div style='display:flex; justify-content:center; margin-top:15px;'>\
-      <img src='consistency.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
-      </div>"
-    },
+    8: buildDay(
+      "Consistency 🧱",
+      "We fight sometimes. But we still talk every night. We still fix things.",
+      "consistency.gif"
+    ),
 
-    9: {
-      title: "Appreciation 🌸",
-      msg: "I appreciate how you stay. Even when it’s not easy. Even when distance makes things harder.<br><br>\
-      <div style='display:flex; justify-content:center; margin-top:15px;'>\
-      <img src='appreciation.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
-      </div>"
-    },
+    9: buildDay(
+      "Appreciation 🌸",
+      "I appreciate how you stay. Even when it is not easy. Even when distance makes it harder.",
+      "appreciation.gif"
+    ),
 
-    10: {
-      title: "Growth 🌱",
-      msg: "We’re learning. We’re improving.<br><br>\
-      <div style='display:flex; justify-content:center; margin-top:15px;'>\
-      <img src='growth.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
-      </div>"
-    },
+    10: buildDay(
+      "Growth 🌱",
+      "We are not perfect. But we are trying. And that matters.",
+      "growth.gif"
+    ),
 
-    11: {
-      title: "Effort 🎁",
-      msg: "Distance makes things harder, but it doesn’t stop effort. I’ll still find ways to show up for you.<br><br>\
-      <button onclick=\"showEffortGif()\" style='padding:8px 18px; border-radius:20px; border:none; background:white; color:#ff4f81; cursor:pointer;'>Click Me 🎁</button>\
-      <div id='effortReveal' style='margin-top:15px; display:none; justify-content:center;'>\
-        <img src='effort.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
-      </div>"
-    },
+    11: buildDay(
+      "Effort 🎁",
+      "Long distance is hard. But I will still show effort.",
+      "effort.gif"
+    ),
 
-    12: {
-      title: "Peace 🕊",
-      msg: "No arguments. Just calm.<br><br>\
-      <div style='display:flex; justify-content:center; margin-top:15px;'>\
-      <img src='peace.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
-      </div>"
-    },
+    12: buildDay(
+      "Peace 🕊",
+      "Let us promise something. We will not bring old mistakes into new fights. If we feel insecure, we talk. Not get upset. Not fight.",
+      "peace.gif"
+    ),
 
-    13: {
-      title: "Anticipation ✨",
-      msg: "Looking forward to tomorrow. Looking forward to us.<br><br>\
-      <div style='display:flex; justify-content:center; margin-top:15px;'>\
-      <img src='anticipation.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
-      </div>"
-    },
+    13: buildDay(
+      "Anticipation ✨",
+      "Tomorrow we stay up. Midnight call. Like always.",
+      "anticipation.gif"
+    ),
 
-    14: {
-      title: "Connection ❤️",
-      msg: "Midnight call. 11:11. I’m choosing you.<br><br>\
-      <div style='display:flex; justify-content:center; margin-top:15px;'>\
-      <img src='connection.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
-      </div>"
-    }
-
+    14: buildDay(
+      "Connection ❤️",
+      "11:11. Same wish. Same two people. I choose you.",
+      "connection.gif"
+    )
   };
 
-  let title = "Our Week ❤️";
-  let message = "This space updates on special days.";
+  let content = {
+    title: "Our Week ❤️",
+    msg: "This space updates on special days."
+  };
 
   if (month === 2 && days[date]) {
-    title = days[date].title;
-    message = days[date].msg;
+    content = days[date];
   }
 
   document.getElementById("screen").innerHTML =
-    "<h1>" + title + "</h1>" +
-    "<p>" + message + "</p>" +
+    "<h1>" + content.title + "</h1>" +
+    "<p>" + content.msg + "</p>" +
     "<div class='footer'>11:11 🤍</div>";
-}
-
-/* Effort GIF reveal */
-function showEffortGif() {
-  const box = document.getElementById("effortReveal");
-  box.style.display = "flex";
 }
 
 </script>

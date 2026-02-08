@@ -19,7 +19,7 @@ body {
   position: relative;
 }
 
-/* Blurred couple background */
+/* Blurred background image */
 body::before {
   content: "";
   position: fixed;
@@ -37,8 +37,7 @@ body::before {
   padding: 35px;
   border-radius: 20px;
   max-width: 480px;
-  backdrop-filter: blur(12px);
-  animation: fadeIn 1s ease;
+  backdrop-filter: blur(10px);
 }
 
 h1 {
@@ -71,11 +70,6 @@ button:hover {
   margin-top: 18px;
   font-size: 13px;
   opacity: 0.85;
-}
-
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(15px);}
-  to {opacity: 1; transform: translateY(0);}
 }
 
 /* Floating hearts */
@@ -111,7 +105,7 @@ button:hover {
   <div class="footer">Long distance. Same heart. 🤍</div>
 </div>
 
-<!-- Local romantic audio (must be uploaded to repo) -->
+<!-- Local music -->
 <audio id="bgMusic" loop preload="auto">
   <source src="romantic.mp3" type="audio/mpeg">
 </audio>
@@ -132,7 +126,7 @@ function createHeart() {
 }
 setInterval(createHeart, 900);
 
-/* Touch sparkle effect */
+/* Touch sparkle */
 function createSparkle(x, y) {
   const sparkle = document.createElement("div");
   sparkle.innerHTML = "❤️";
@@ -162,7 +156,7 @@ document.addEventListener("click", function(e) {
   createSparkle(e.clientX, e.clientY);
 });
 
-/* Enter button logic */
+/* Enter function */
 function enter() {
 
   const music = document.getElementById("bgMusic");
@@ -174,26 +168,72 @@ function enter() {
   const date = today.getDate();
 
   const days = {
+
     7: {
       title: "Reassurance 🤍",
-      msg: "I’m here. Steady. No confusion. You don’t have to question where I stand."
+      msg: "I’m here. Steady. No confusion.<br><br>\
+      <div style='display:flex; justify-content:center; margin-top:15px;'>\
+      <img src='reassurance.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
+      </div>"
     },
-   9: {
+
+    8: {
+      title: "Consistency 🧱",
+      msg: "Nothing dramatic. Just consistency.<br><br>\
+      <div style='display:flex; justify-content:center; margin-top:15px;'>\
+      <img src='consistency.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
+      </div>"
+    },
+
+    9: {
       title: "Appreciation 🌸",
-      msg: "I appreciate how you stay. Even when it’s not easy. Even when distance makes things harder.<br><br><img src='https://tenor.com/frS0eVqg7Uf.gif' alt='Long Distance Love' style='width:100%; max-width:300px; border-radius:15px;'>"
+      msg: "I appreciate how you stay. Even when it’s not easy. Even when distance makes things harder.<br><br>\
+      <div style='display:flex; justify-content:center; margin-top:15px;'>\
+      <img src='appreciation.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
+      </div>"
     },
+
+    10: {
+      title: "Growth 🌱",
+      msg: "We’re learning. We’re improving.<br><br>\
+      <div style='display:flex; justify-content:center; margin-top:15px;'>\
+      <img src='growth.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
+      </div>"
+    },
+
     11: {
       title: "Effort 🎁",
-      msg: "Today is action. Something small. Something real."
+      msg: "Distance makes things harder, but it doesn’t stop effort. I’ll still find ways to show up for you.<br><br>\
+      <button onclick=\"showEffortGif()\" style='padding:8px 18px; border-radius:20px; border:none; background:white; color:#ff4f81; cursor:pointer;'>Click Me 🎁</button>\
+      <div id='effortReveal' style='margin-top:15px; display:none; justify-content:center;'>\
+        <img src='effort.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
+      </div>"
     },
+
     12: {
       title: "Peace 🕊",
-      msg: "No arguments. No tension. Just calm."
+      msg: "No arguments. Just calm.<br><br>\
+      <div style='display:flex; justify-content:center; margin-top:15px;'>\
+      <img src='peace.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
+      </div>"
     },
+
+    13: {
+      title: "Anticipation ✨",
+      msg: "Looking forward to tomorrow. Looking forward to us.<br><br>\
+      <div style='display:flex; justify-content:center; margin-top:15px;'>\
+      <img src='anticipation.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
+      </div>"
+    },
+
     14: {
       title: "Connection ❤️",
-      msg: "Midnight call. 11:11. I’m choosing you."
+      msg: "Midnight call. 11:11. I’m choosing you.<br><br>\
+      <div style='display:flex; justify-content:center; margin-top:15px;'>\
+      <img src='connection.gif' style='width:85%; max-width:260px; border-radius:15px;'>\
+      </div>"
     }
+
   };
 
   let title = "Our Week ❤️";
@@ -210,8 +250,13 @@ function enter() {
     "<div class='footer'>11:11 🤍</div>";
 }
 
+/* Effort GIF reveal */
+function showEffortGif() {
+  const box = document.getElementById("effortReveal");
+  box.style.display = "flex";
+}
+
 </script>
 
 </body>
 </html>
-

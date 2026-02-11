@@ -19,7 +19,6 @@ body {
   position: relative;
 }
 
-/* Blurred background */
 body::before {
   content: "";
   position: fixed;
@@ -63,7 +62,6 @@ button:hover { transform: scale(1.07); }
   opacity: 0.85;
 }
 
-/* Floating hearts */
 .heart {
   position: absolute;
   bottom: -20px;
@@ -139,22 +137,27 @@ document.addEventListener("touchstart", e => {
   const t = e.touches[0];
   sparkle(t.clientX, t.clientY);
 });
-
 document.addEventListener("click", e => {
   sparkle(e.clientX, e.clientY);
 });
-
-/* Reveal function */
-function revealGif(id) {
-  document.getElementById(id).style.display = "flex";
-}
 
 /* Sentence formatter */
 function formatLines(text) {
   return text.split(". ").join(".<br><br>");
 }
 
-/* Helper to build each day */
+/* Reveal single GIF */
+function revealGif(id) {
+  document.getElementById(id).style.display = "flex";
+}
+
+/* Effort step reveal */
+function showStep(step) {
+  document.getElementById("step" + step).style.display =
+    step === 3 ? "flex" : "block";
+}
+
+/* Helper for normal days */
 function buildDay(title, text, gifFile) {
   const id = gifFile.replace(".gif","") + "Reveal";
   return {
@@ -167,7 +170,6 @@ function buildDay(title, text, gifFile) {
   };
 }
 
-/* Enter */
 function enter() {
 
   const music = document.getElementById("bgMusic");
@@ -180,53 +182,50 @@ function enter() {
 
   const days = {
 
-    7: buildDay(
-      "Reassurance 🤍",
-      "You overthink sometimes. I know that. But I am not leaving. Even when we fight.",
-      "reassurance.gif"
-    ),
+    7: buildDay("Reassurance 🤍",
+      "You overthink sometimes. I know that. But I am not leaving.",
+      "reassurance.gif"),
 
-    8: buildDay(
-      "Consistency 🧱",
-      "We fight sometimes. But we still talk every night. We still fix things.",
-      "consistency.gif"
-    ),
+    8: buildDay("Consistency 🧱",
+      "We fight sometimes. But we still call every night.",
+      "consistency.gif"),
 
-    9: buildDay(
-      "Appreciation 🌸",
-      "I appreciate how you stay. Even when it is not easy. Even when distance makes it harder.",
-      "appreciation.gif"
-    ),
+    9: buildDay("Appreciation 🌸",
+      "I appreciate how you stay. Even when it is not easy.",
+      "appreciation.gif"),
 
-    10: buildDay(
-      "Growth 🌱",
-      "We are not perfect. But we are trying. And that matters.",
-      "growth.gif"
-    ),
+    10: buildDay("Growth 🌱",
+      "We are not perfect. But we are trying.",
+      "growth.gif"),
 
-    11: buildDay(
-      "Effort 🎁",
-      "Long distance is hard. But I will still show effort.",
-      "effort.gif"
-    ),
+    11: {
+      title: "Effort 🎁",
+      msg:
+      "Effort builds step by step.<br><br>" +
 
-    12: buildDay(
-      "Peace 🕊",
-      "Let us promise something. We will not bring old mistakes into new fights. If we feel insecure, we talk. Not get upset. Not fight.",
-      "peace.gif"
-    ),
+      "<button onclick=\"showStep(1)\">Show Me ❤️</button>" +
+      "<div id='step1' style='display:none; margin-top:12px;'>I am still here.</div><br>" +
 
-    13: buildDay(
-      "Anticipation ✨",
-      "Tomorrow we stay up. Midnight call. Like always.",
-      "anticipation.gif"
-    ),
+      "<button onclick=\"showStep(2)\">Show Me ❤️</button>" +
+      "<div id='step2' style='display:none; margin-top:12px;'>I am still choosing you.</div><br>" +
 
-    14: buildDay(
-      "Connection ❤️",
-      "11:11. Same wish. Same two people. I choose you.",
-      "connection.gif"
-    )
+      "<button onclick=\"showStep(3)\">Show Me 🎁</button>" +
+      "<div id='step3' style='display:none; margin-top:15px; justify-content:center;'>" +
+      "<img src='effort.gif' style='width:85%; max-width:260px; border-radius:15px;'>" +
+      "</div>"
+    },
+
+    12: buildDay("Peace 🕊",
+      "Let us promise something. We will not bring old mistakes into new fights. If we feel insecure, we talk.",
+      "peace.gif"),
+
+    13: buildDay("Anticipation ✨",
+      "Tomorrow midnight call. Like always.",
+      "anticipation.gif"),
+
+    14: buildDay("Connection ❤️",
+      "11:11. Same wish. I choose you.",
+      "connection.gif")
   };
 
   let content = {

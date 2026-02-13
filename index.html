@@ -5,243 +5,319 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For Selly ❤️</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
 <style>
-body {
-  margin: 0;
+
+body{
+  margin:0;
+  background:#0f0f18;
+  color:white;
+  overflow:hidden;
   font-family: Arial, sans-serif;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
-  overflow: hidden;
-  position: relative;
 }
 
-body::before {
-  content: "";
+/* Floating background hearts */
+.bg-heart {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('bg.JPG.jpeg') no-repeat center center/cover;
-  filter: blur(18px) brightness(0.55);
-  z-index: -1;
-}
-
-.card {
-  background: rgba(0,0,0,0.45);
-  padding: 35px;
-  border-radius: 20px;
-  max-width: 480px;
-  backdrop-filter: blur(10px);
-}
-
-h1 { margin-bottom: 15px; font-size: 22px; }
-p { line-height: 1.6; font-size: 16px; }
-
-button {
-  margin-top: 12px;
-  padding: 10px 22px;
-  border-radius: 25px;
-  border: none;
-  background: white;
-  color: #ff4f81;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover { transform: scale(1.07); }
-
-.footer {
-  margin-top: 18px;
-  font-size: 13px;
-  opacity: 0.85;
-}
-
-.heart {
-  position: absolute;
-  bottom: -20px;
-  animation: floatUp 8s linear infinite;
-  opacity: 0.7;
+  bottom: -50px;
+  font-size: 24px;
+  opacity: 0.12;
+  filter: blur(4px);
+  animation: floatUp 14s linear infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes floatUp {
-  from {transform: translateY(0);}
-  to {transform: translateY(-110vh);}
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-110vh) scale(1.4); }
 }
+
+/* Gift Screen */
+
+.gift-wrapper{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  z-index:1;
+}
+
+.gift{
+  width:150px;
+  height:150px;
+  background:#ff4f81;
+  position:relative;
+  cursor:pointer;
+}
+
+.gift:before{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:20px;
+  background:white;
+  top:65px;
+}
+
+.gift:after{
+  content:"";
+  position:absolute;
+  height:100%;
+  width:20px;
+  background:white;
+  left:65px;
+}
+
+.gift-text{
+  margin-top:20px;
+  font-family:'Playfair Display', serif;
+  font-size:22px;
+  text-align:center;
+}
+
+.fade-out{
+  opacity:0;
+  transition:1s;
+}
+
+/* Memory Section */
+
+.memory-section{
+  display:none;
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+  background:#141426;
+  z-index:1;
+}
+
+.cable{
+  position:absolute;
+  top:50%;
+  width:200%;
+  height:4px;
+  background:linear-gradient(to right,#ff4f81,#ffffff,#ff4f81);
+  animation:glow 3s infinite alternate;
+}
+
+@keyframes glow{
+  from{opacity:0.6}
+  to{opacity:1}
+}
+
+.slider{
+  display:flex;
+  align-items:center;
+  height:100%;
+  transition:0.6s ease;
+}
+
+.memory{
+  min-width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.polaroid{
+  background:white;
+  color:black;
+  padding:15px;
+  width:260px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,0.6);
+}
+
+.polaroid img,
+.polaroid video{
+  width:100%;
+}
+
+.memory-date{
+  font-family:'Playfair Display', serif;
+  margin-top:10px;
+  font-weight:600;
+}
+
+.memory-caption{
+  font-family:'Dancing Script', cursive;
+  font-weight:bold;
+  font-size:19px;
+  margin-top:6px;
+}
+
+/* Final */
+
+.pulse-heart{
+  font-size:60px;
+  animation:pulse 1.6s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.2)}
+  100%{transform:scale(1)}
+}
+
+.final-text{
+  margin-top:10px;
+  font-family:'Dancing Script', cursive;
+  font-weight:bold;
+  font-size:22px;
+  color:black;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="card" id="screen">
-  <h1>Doing This Our Way ❤️</h1>
-  <p>
-    Everyone is posting roses 🌹 and chocolate reels 🍫<br><br>
-    I don’t want copy love.<br><br>
-    I want something that feels like us.
-  </p>
-
-  <h2 style="margin-top:20px;">Will you be my Valentine? 💌</h2>
-
-  <button onclick="enter()">Yes 💛</button>
-  <button onclick="enter()" style="margin-left:10px;">Obviously Yes 😌</button>
-
-  <div class="footer">Long distance. Same heart. 🤍</div>
+<div class="gift-wrapper" id="giftScreen">
+  <div class="gift" onclick="openGift()"></div>
+  <div class="gift-text">
+    For Selly ❤️<br>
+    Open it slowly
+  </div>
 </div>
 
-<audio id="bgMusic" loop preload="auto">
-  <source src="romantic.mp3" type="audio/mpeg">
+<div class="memory-section" id="memorySection">
+  <div class="cable"></div>
+  <div class="slider" id="slider">
+
+    <div class="memory">
+      <div class="polaroid">
+        <img src="mem1.jpeg">
+        <div class="memory-date">15 May 2024</div>
+        <div class="memory-caption">
+          The day we started talking.  
+          We had no idea it would turn into this.
+        </div>
+      </div>
+    </div>
+
+    <div class="memory">
+      <div class="polaroid">
+        <img src="mem2.jpeg">
+        <div class="memory-date">1 Aug 2024</div>
+        <div class="memory-caption">
+          Girlfriend’s Day.  
+          That little bento cake because you deserve sweet things.
+        </div>
+      </div>
+    </div>
+
+    <div class="memory">
+      <div class="polaroid">
+        <img src="mem3.jpeg">
+        <div class="memory-date">28 Sep 2024</div>
+        <div class="memory-caption">
+          Our first meet up.  
+          Seeing you in real life felt different.
+        </div>
+      </div>
+    </div>
+
+    <div class="memory">
+      <div class="polaroid">
+        <video controls playsinline>
+          <source src="memory4.mp4" type="video/mp4">
+        </video>
+        <div class="memory-date">15 May 2025</div>
+        <div class="memory-caption">
+          One year together.  
+          Through everything, we stayed.
+        </div>
+      </div>
+    </div>
+
+    <div class="memory">
+      <div class="polaroid" id="finalCard">
+        <img src="final3.jpeg" id="finalImage">
+        <div class="memory-date">Now</div>
+        <div class="memory-caption">Tap slowly ❤️</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="athousandyears.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-/* Floating hearts */
-function createHeart() {
+/* Floating Hearts */
+function createBackgroundHeart() {
   const heart = document.createElement("div");
-  heart.classList.add("heart");
-  const hearts = ["❤️","💖","💗","💘"];
-  heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = (18 + Math.random() * 12) + "px";
-  heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+  heart.classList.add("bg-heart");
+  const symbols = ["❤️","🌹"];
+  heart.innerHTML = symbols[Math.floor(Math.random()*symbols.length)];
+  heart.style.left = Math.random()*100 + "vw";
+  heart.style.fontSize = (20 + Math.random()*25) + "px";
+  heart.style.animationDuration = (12 + Math.random()*10) + "s";
   document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 8000);
+  setTimeout(()=>heart.remove(),20000);
 }
-setInterval(createHeart, 900);
+setInterval(createBackgroundHeart,1200);
 
-/* Touch sparkle */
-function sparkle(x, y) {
-  const s = document.createElement("div");
-  s.innerHTML = "❤️";
-  s.style.position = "fixed";
-  s.style.left = x + "px";
-  s.style.top = y + "px";
-  s.style.fontSize = "24px";
-  s.style.pointerEvents = "none";
-  s.style.transition = "all 0.8s ease";
-  s.style.zIndex = "9999";
-  document.body.appendChild(s);
-  setTimeout(() => {
-    s.style.transform = "translateY(-40px)";
-    s.style.opacity = "0";
-  }, 10);
-  setTimeout(() => s.remove(), 800);
-}
-
-document.addEventListener("touchstart", e => {
-  const t = e.touches[0];
-  sparkle(t.clientX, t.clientY);
-});
-document.addEventListener("click", e => {
-  sparkle(e.clientX, e.clientY);
-});
-
-/* Sentence formatter */
-function formatLines(text) {
-  return text.split(". ").join(".<br><br>");
-}
-
-/* Reveal single GIF */
-function revealGif(id) {
-  document.getElementById(id).style.display = "flex";
-}
-
-/* Effort step reveal */
-function showStep(step) {
-  document.getElementById("step" + step).style.display =
-    step === 3 ? "flex" : "block";
-}
-
-/* Helper for normal days */
-function buildDay(title, text, gifFile) {
-  const id = gifFile.replace(".gif","") + "Reveal";
-  return {
-    title: title,
-    msg: formatLines(text) + "<br><br>" +
-    "<button onclick=\"revealGif('" + id + "')\">Show Me ❤️</button>" +
-    "<div id='" + id + "' style='margin-top:15px; display:none; justify-content:center;'>" +
-    "<img src='" + gifFile + "' style='width:85%; max-width:260px; border-radius:15px;'>" +
-    "</div>"
-  };
-}
-
-function enter() {
-
-  const music = document.getElementById("bgMusic");
-  music.volume = 0.7;
-  music.play();
-
-  const today = new Date();
-  const month = today.getMonth() + 1;
-  const date = today.getDate();
-
-  const days = {
-
-    7: buildDay("Reassurance 🤍",
-      "You overthink sometimes. I know that. But I am not leaving.",
-      "reassurance.gif"),
-
-    8: buildDay("Consistency 🧱",
-      "We fight sometimes. But we still call every night.",
-      "consistency.gif"),
-
-    9: buildDay("Appreciation 🌸",
-      "I appreciate how you stay. Even when it is not easy.",
-      "appreciation.gif"),
-
-    10: buildDay("Growth 🌱",
-      "We are not perfect. But we are trying.",
-      "growth.gif"),
-
-    11: {
-      title: "Effort 🎁",
-      msg:
-      "Effort builds step by step.<br><br>" +
-
-      "<button onclick=\"showStep(1)\">Show Me ❤️</button>" +
-      "<div id='step1' style='display:none; margin-top:12px;'>I am still here.</div><br>" +
-
-      "<button onclick=\"showStep(2)\">Show Me ❤️</button>" +
-      "<div id='step2' style='display:none; margin-top:12px;'>I am still choosing you.</div><br>" +
-
-      "<button onclick=\"showStep(3)\">Show Me 🎁</button>" +
-      "<div id='step3' style='display:none; margin-top:15px; justify-content:center;'>" +
-      "<img src='effort.gif' style='width:85%; max-width:260px; border-radius:15px;'>" +
-      "</div>"
-    },
-
-    12: buildDay("Peace 🕊",
-      "Let us promise something. We will not bring old mistakes into new fights. If we feel insecure, we talk.",
-      "peace.gif"),
-
-    13: buildDay("Anticipation ✨",
-      "Tomorrow midnight call. Like always.",
-      "anticipation.gif"),
-
-    14: buildDay("Connection ❤️",
-      "11:11. Same wish. I choose you.",
-      "connection.gif")
-  };
-
-  let content = {
-    title: "Our Week ❤️",
-    msg: "This space updates on special days."
-  };
-
-  if (month === 2 && days[date]) {
-    content = days[date];
+/* Gift */
+let taps=0;
+function openGift(){
+  taps++;
+  if(taps>=4){
+    document.getElementById("giftScreen").classList.add("fade-out");
+    setTimeout(()=>{
+      document.getElementById("giftScreen").style.display="none";
+      document.getElementById("memorySection").style.display="block";
+      document.getElementById("bgMusic").play();
+    },800);
   }
-
-  document.getElementById("screen").innerHTML =
-    "<h1>" + content.title + "</h1>" +
-    "<p>" + content.msg + "</p>" +
-    "<div class='footer'>11:11 🤍</div>";
 }
+
+/* Swipe */
+let slider=document.getElementById("slider");
+let index=0;
+let startX=0;
+
+document.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+document.addEventListener("touchend",e=>{
+  let diff=e.changedTouches[0].clientX-startX;
+  if(diff>50 && index>0){index--;}
+  if(diff<-50 && index<4){index++;}
+  slider.style.transform=`translateX(-${index*100}%)`;
+});
+
+/* Final Flip */
+let flipStep=0;
+document.getElementById("finalCard").onclick=function(){
+  if(index!==4) return;
+  flipStep++;
+  if(flipStep===1){
+    document.getElementById("finalImage").src="final2.jpeg";
+  }
+  else if(flipStep===2){
+    document.getElementById("finalImage").src="final1.jpeg";
+  }
+  else if(flipStep===3){
+    const startDate=new Date("2024-05-15");
+    const today=new Date();
+    const diff=Math.floor((today-startDate)/(1000*60*60*24));
+    document.getElementById("finalCard").innerHTML=
+      `<div class="pulse-heart">❤️</div>
+       <div class="final-text">
+         Happy Valentine bby ❤️<br>
+         Thank you for being with me for ${diff} days.<br>
+         Till forever.
+       </div>`;
+  }
+};
 
 </script>
 

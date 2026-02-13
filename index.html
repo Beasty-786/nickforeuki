@@ -132,10 +132,10 @@ body{margin:0;overflow:hidden;background:#000;}
 }
 .milestone{
   position:absolute;
-  width:120px;
+  width:140px;
   left:50%;
   transform:translateX(-50%);
-  bottom:-80px;
+  bottom:-90px;
   opacity:0;
   transition:1s ease;
   border-radius:10px;
@@ -331,28 +331,35 @@ document.addEventListener("touchend",e=>{
 
 /* Timeline */
 function startTimeline(card){
+
   const startDate=new Date("2024-05-15");
   const today=new Date();
   const totalDays=Math.floor((today-startDate)/(1000*60*60*24));
 
   card.innerHTML=`
     <div class="date">15 May 2024 → Today</div>
+
     <div class="timeline-wrapper">
       <div class="timeline" id="line"></div>
       <img src="final3.jpeg" class="milestone" id="milestoneImg">
     </div>
+
     <div class="counter" id="counter">0 days</div>
   `;
 
   const line=document.getElementById("line");
   const milestone=document.getElementById("milestoneImg");
-
-  setTimeout(()=>{line.style.width="100%";},300);
-
-  let count=0;
   const counterEl=document.getElementById("counter");
+
+  // Animate timeline bar
+  setTimeout(()=>{
+    line.style.width="100%";
+  },500);
+
+  // Counter animation
+  let count=0;
   const interval=setInterval(()=>{
-    count+=Math.ceil(totalDays/60);
+    count+=Math.ceil(totalDays/80);
     if(count>=totalDays){
       count=totalDays;
       clearInterval(interval);
@@ -360,23 +367,37 @@ function startTimeline(card){
     counterEl.innerHTML=count+" days";
   },40);
 
-  setTimeout(()=>{milestone.style.opacity="1";},1000);
-  setTimeout(()=>{milestone.style.opacity="0";},2200);
+  // Show final3
+  setTimeout(()=>{
+    milestone.style.opacity="1";
+  },1500);
 
+  // Hide final3
+  setTimeout(()=>{
+    milestone.style.opacity="0";
+  },3000);
+
+  // Show final2
   setTimeout(()=>{
     milestone.src="final2.jpeg";
     milestone.style.opacity="1";
-  },3000);
+  },3800);
 
-  setTimeout(()=>{milestone.style.opacity="0";},4500);
+  // Hide final2
+  setTimeout(()=>{
+    milestone.style.opacity="0";
+  },5200);
 
+  // Show final1 and keep it
   setTimeout(()=>{
     milestone.src="final1.jpeg";
     milestone.style.opacity="1";
-  },5300);
+  },6000);
 
+  // Final emotional moment
   setTimeout(()=>{
     document.getElementById("bg").style.transform="scale(1.4)";
+
     card.innerHTML+=`
       <div class="heart">❤️</div>
       <div class="final-title">Happy Valentine Day ❤️</div>
@@ -385,8 +406,9 @@ function startTimeline(card){
         Till forever.
       </div>
     `;
-  },7000);
+  },8000);
 }
 </script>
 </body>
 </html>
+

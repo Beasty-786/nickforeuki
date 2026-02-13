@@ -1,253 +1,389 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>For Selly ❤️</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;overflow:hidden;background:#000;font-family:Arial,Helvetica,sans-serif}
-.bg{position:fixed;width:100%;height:100%;background-size:cover;background-position:center;filter:blur(25px) brightness(0.35);transform:scale(1.2);transition:1.6s ease;z-index:-2}
+  :root { --accent:#ff4f81; --bg-dim: rgba(0,0,0,0.35); }
+  html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#000;overflow:hidden}
+  .bg{position:fixed;inset:0;background:#111 center/cover no-repeat;filter:blur(24px) brightness(0.36);transform:scale(1.18);transition:transform 1.2s ease, background-image 0.8s ease;z-index:-2}
 
-/* Floating hearts */
-.particle{position:fixed;bottom:-40px;font-size:24px;opacity:0.45;filter:blur(2px);animation:floatUp linear infinite;pointer-events:none}
-@keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-110vh)}}
+  /* particles */
+  .particle{position:fixed;bottom:-60px;font-size:24px;opacity:0.45;filter:blur(2px);pointer-events:none;animation:floatUp linear infinite}
+  @keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-120vh)}}
 
-/* Gift */
-.scene{height:100vh;display:flex;justify-content:center;align-items:center;background:#111122}
-.box{position:relative;width:200px;height:200px;cursor:pointer}
-.box-body{width:100%;height:100%;background:linear-gradient(145deg,#ff5c8a,#ff2e6a);border-radius:12px;box-shadow:0 30px 60px rgba(0,0,0,0.7);overflow:hidden;position:relative}
-.box-lid{position:absolute;width:100%;height:100%;background:linear-gradient(145deg,#ff5c8a,#ff2e6a);transform-origin:top;transition:0.8s ease}
-.box-bowtie{position:absolute;width:60px;height:30px;background:white;top:-15px;left:50%;transform:translateX(-50%);border-radius:50%}
-.flower{position:absolute;width:160px;left:50%;bottom:-200px;transform:translateX(-50%);transition:1s cubic-bezier(0.22,1,0.36,1)}
-.petal{position:absolute;font-size:18px;animation:petalFloat linear forwards}
-@keyframes petalFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(-250px) rotate(360deg);opacity:0}}
+  /* gift */
+  .scene{height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0f17}
+  .box{width:220px;height:220px;cursor:pointer;perspective:900px}
+  .box-body{width:100%;height:100%;border-radius:14px;background:linear-gradient(145deg,#ff7aa2,#ff3b7a);position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.7);overflow:visible}
+  .box-lid{position:absolute;inset:0;border-radius:14px;transform-origin:top;transition:transform 0.7s ease}
+  .box-bowtie{position:absolute;width:68px;height:34px;background:#fff;border-radius:40px;top:-20px;left:50%;transform:translateX(-50%)}
+  .flower{position:absolute;left:50%;bottom:-220px;transform:translateX(-50%);width:170px;transition:bottom 0.9s cubic-bezier(0.22,1,0.36,1)}
+  .petal{position:absolute;font-size:18px;pointer-events:none;animation:petalFloat linear forwards}
+  @keyframes petalFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(-260px) rotate(360deg);opacity:0}}
 
-/* Carousel */
-.memory-section{display:none;height:100vh;display:flex;justify-content:center;align-items:center;perspective:1200px}
-.carousel{position:relative;width:100%;height:420px;display:flex;justify-content:center;align-items:center}
-.card{position:absolute;width:300px;background:white;color:black;padding:20px;border-radius:12px;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,0.6);transition:0.6s cubic-bezier(0.22,1,0.36,1)}
-.card img,.card iframe{width:100%;border-radius:8px}
-.date{font-family:'Playfair Display',serif;font-weight:bold;margin-top:8px}
-.caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:6px;white-space:pre-line}
+  /* carousel */
+  .memory-section{display:none;height:100vh;display:flex;align-items:center;justify-content:center;perspective:1200px}
+  .carousel{position:relative;width:100%;max-width:920px;height:460px;display:flex;align-items:center;justify-content:center;overflow:visible}
+  .card{position:absolute;width:320px;background:#fff;color:#111;border-radius:12px;padding:18px;text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.55);transition:transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.6s ease, opacity 0.6s ease}
+  .card img,.card iframe{width:100%;height:auto;border-radius:8px;display:block}
+  .date{font-family:'Playfair Display',serif;font-weight:700;margin-top:10px}
+  .caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:8px;white-space:pre-line;color:#222}
 
-/* Timeline */
-.timeline-wrapper{position:relative;margin-top:20px}
-.timeline{width:0%;height:6px;background:linear-gradient(to right,#ff4f81,#fff,#ff4f81);border-radius:10px;transition:3s ease}
-.milestone{position:absolute;width:130px;left:50%;transform:translateX(-50%);bottom:-85px;opacity:0;transition:1s ease;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,0.4)}
-.counter{font-family:'Playfair Display',serif;font-weight:bold;font-size:24px;margin-top:20px}
-.heart{font-size:70px;animation:pulse 1.6s infinite}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
-.final-title{font-family:'Playfair Display',serif;font-weight:bold;font-size:26px;margin-top:15px}
-.final-text{font-family:'Dancing Script',cursive;font-size:24px}
+  /* timeline */
+  .timeline-wrapper{position:relative;margin-top:16px}
+  .timeline{width:0%;height:6px;background:linear-gradient(90deg,var(--accent),#fff,var(--accent));border-radius:10px;transition:width 3s ease}
+  .milestone{position:absolute;width:140px;left:50%;transform:translateX(-50%);bottom:-90px;opacity:0;transition:opacity 0.9s ease}
+  .counter{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;margin-top:16px}
+  .heart{font-size:68px;margin-top:12px;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+  .final-title{font-family:'Playfair Display',serif;font-weight:700;font-size:26px;margin-top:8px}
+  .final-text{font-family:'Dancing Script',cursive;font-size:22px;margin-top:8px}
+  @media (max-width:520px){.card{width:88vw}.milestone{width:110px}}
 </style>
 </head>
-
 <body>
 
 <div class="bg" id="bg"></div>
 
+<!-- Gift -->
 <div class="scene" id="giftScene">
-  <div class="box" onclick="openBox()">
+  <div class="box" id="giftBox" role="button" aria-label="Open gift" tabindex="0">
     <div class="box-body">
-      <img class="flower" src="flowers.png" id="flower">
-      <div class="box-lid" id="lid"><div class="box-bowtie"></div></div>
+      <img src="flowers.png" id="flower" class="flower" alt="bouquet">
+      <div class="box-lid" id="lid"></div>
+      <div class="box-bowtie"></div>
     </div>
   </div>
 </div>
 
+<!-- Memories -->
 <div class="memory-section" id="memorySection">
   <div class="carousel" id="carousel"></div>
 </div>
 
-<audio id="music" loop>
+<audio id="music" loop preload="auto">
   <source src="athousandyears.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+/* --------- helpers & globals --------- */
+const timelineIndex = 4; // index of timeline card in memories array (0-based)
+let timelineStarted = false;
 
-/* Floating hearts */
-function createParticle(){
-  const p=document.createElement("div");
-  p.className="particle";
-  p.innerHTML=Math.random()>0.5?"❤️":"🌹";
-  p.style.left=Math.random()*100+"vw";
-  p.style.fontSize=(18+Math.random()*30)+"px";
-  p.style.animationDuration=(10+Math.random()*10)+"s";
-  document.body.appendChild(p);
-  setTimeout(()=>p.remove(),20000);
+/* floating hearts particles */
+function spawnParticle(){
+  const el = document.createElement('div'); el.className='particle';
+  el.innerText = Math.random()>0.5 ? '❤️' : '🌹';
+  el.style.left = (Math.random()*100) + 'vw';
+  el.style.fontSize = (16 + Math.random()*32) + 'px';
+  el.style.animationDuration = (10 + Math.random()*12) + 's';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),20000);
 }
-setInterval(createParticle,900);
+setInterval(spawnParticle,900);
 
-/* Gift */
+/* --------- gift interaction --------- */
+const lid = document.getElementById('lid');
+const flower = document.getElementById('flower');
+const giftBox = document.getElementById('giftBox');
+
+function releasePetals(){
+  const body = document.querySelector('.box-body');
+  for(let i=0;i<12;i++){
+    const p = document.createElement('div');
+    p.className='petal'; p.innerText='🌸';
+    p.style.left = (20 + Math.random()*160) + 'px';
+    p.style.bottom = '60px';
+    p.style.fontSize = (14 + Math.random()*12) + 'px';
+    p.style.animationDuration = (2 + Math.random()*2) + 's';
+    body.appendChild(p);
+    setTimeout(()=>p.remove(),4200);
+  }
+}
+
 function openBox(){
-  const lid=document.getElementById("lid");
-  const flower=document.getElementById("flower");
-
-  lid.style.transform="rotateX(-120deg)";
-  setTimeout(()=>flower.style.bottom="30px",400);
-
+  // anticipation shake
+  giftBox.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:420,easing:'ease',iterations:1});
+  setTimeout(()=>{ lid.style.transform='rotateX(-120deg)'; },420);
+  setTimeout(()=>{ flower.style.bottom='28px'; releasePetals(); },850);
   setTimeout(()=>{
-    document.getElementById("giftScene").style.display="none";
-    document.getElementById("memorySection").style.display="flex";
-    document.getElementById("music").play().catch(()=>{});
+    document.getElementById('giftScene').style.display='none';
+    document.getElementById('memorySection').style.display='flex';
+    document.getElementById('music').play().catch(()=>{}); // may require user tap
     initCarousel();
-  },2500);
+  },1700);
 }
 
-/* Memories */
-const memories=[
-{
-type:"img",
-src:"mem1.jpeg",
-date:"15 May 2024",
-cap:`The day we started talking.
+giftBox.addEventListener('click', openBox);
+giftBox.addEventListener('keydown', e=>{ if(e.key==='Enter') openBox(); });
+
+/* --------- memories data (personal, short lines) --------- */
+const memories = [
+  {
+    type:'img',
+    src:'mem1.jpeg',
+    date:'15 May 2024',
+    cap:`The day we started talking.
 I didn’t know you would become this important.
 It started normal.
 Now it’s us.`
-},
-{
-type:"img",
-src:"mem2.jpeg",
-date:"01 Aug 2024",
-cap:`Girlfriend’s Day.
+  },
+  {
+    type:'img',
+    src:'mem2.jpeg',
+    date:'01 Aug 2024',
+    cap:`Girlfriend's Day.
 That small cute cake.
 I just wanted you to feel special.
 Because you are.`
-},
-{
-type:"img",
-src:"mem3.jpeg",
-date:"28 Sep 2024",
-cap:`Our first meet up.
+  },
+  {
+    type:'img',
+    src:'mem3.jpeg',
+    date:'28 Sep 2024',
+    cap:`Our first meet up.
 Finally seeing you in front of me.
 Not just a screen.
 That day felt different.`
-},
-{
-type:"video",
-src:"https://streamable.com/e/2c6hpr",
-date:"15 May 2025",
-cap:`One year together.
+  },
+  {
+    type:'video',
+    src:'https://streamable.com/e/2c6hpr',
+    date:'15 May 2025',
+    cap:`One year together.
 We fought.
 We fixed.
 We stayed.
 That’s what matters.`
-},
-{type:"timeline"}
+  },
+  { type:'timeline' }
 ];
 
-let current=0;
-let startX=0;
-let isDragging=false;
+/* ---------- carousel engine with natural swipe ---------- */
+let current = 0;
+const carousel = document.getElementById('carousel');
+const bg = document.getElementById('bg');
 
-function initCarousel(){render();updateBG();}
+function initCarousel(){
+  render();
+  // attach pointer fallback listeners in render's setup
+  setupSwipe(); // safe to call (function idempotent)
+}
 
+/* render cards */
 function render(){
-const container=document.getElementById("carousel");
-container.innerHTML="";
+  carousel.innerHTML = '';
+  memories.forEach((m,i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    const offset = i - current;
 
-memories.forEach((m,i)=>{
-const card=document.createElement("div");
-card.className="card";
-const offset=i-current;
+    // position + depth
+    const tx = offset * 360;
+    const scale = offset === 0 ? 1 : 0.82;
+    const rotateY = offset * 10;
+    card.style.transform = `translateX(${tx}px) scale(${scale}) rotateY(${rotateY}deg)`;
+    card.style.opacity = offset === 0 ? '1' : '0.68';
+    card.style.filter = offset === 0 ? 'blur(0px)' : 'blur(4px)';
+    card.style.zIndex = 50 - Math.abs(offset);
 
-card.style.transform=`translateX(${offset*340}px) scale(${offset===0?1:0.8})`;
-card.style.opacity=offset===0?1:0.6;
-card.style.filter=offset===0?"blur(0)":"blur(4px)";
-card.style.zIndex=5-Math.abs(offset);
+    // content
+    if(m.type === 'img'){
+      card.innerHTML = `<img src="${m.src}" alt=""><div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
+    } else if(m.type === 'video'){
+      card.innerHTML = `<iframe src="${m.src}" frameborder="0" height="220" style="border-radius:8px" allow="autoplay; fullscreen"></iframe>
+        <div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
+    } else if(m.type === 'timeline'){
+      // append and then initialize timeline on the appended card
+      card.innerHTML = `<div class="date">Loading...</div>`;
+      // we'll call startTimeline after append
+    }
 
-if(m.type==="img"){
-card.innerHTML=`<img src="${m.src}">
-<div class="date">${m.date}</div>
-<div class="caption">${m.cap}</div>`;
+    carousel.appendChild(card);
+
+    // if timeline card, start timeline after it's in DOM
+    if(m.type === 'timeline' && i === current){
+      // start slightly after append to guarantee DOM
+      setTimeout(()=>startTimeline(card), 50);
+    }
+  });
+
+  updateBG();
 }
-else if(m.type==="video"){
-card.innerHTML=`<iframe src="${m.src}" height="220" frameborder="0" allowfullscreen></iframe>
-<div class="date">${m.date}</div>
-<div class="caption">${m.cap}</div>`;
-}
-else{
-startTimeline(card);
-}
 
-container.appendChild(card);
-});
-
-updateBG();
-}
-
+/* update blurred background */
 function updateBG(){
-if(memories[current].src){
-document.getElementById("bg").style.backgroundImage=`url(${memories[current].src})`;
+  const m = memories[current];
+  if(m && m.type === 'img' && m.src){
+    bg.style.backgroundImage = `url(${m.src})`;
+  } else {
+    bg.style.backgroundImage = `url(mem3.jpeg)`;
+  }
 }
+
+/* ---------- swipe with inertia-like feel (touch + mouse) ---------- */
+let startX = 0;
+let lastX = 0;
+let lastTime = 0;
+let isDown = false;
+let vel = 0;
+let swipeAttached = false;
+
+function setupSwipe(){
+  if(swipeAttached) return;
+  swipeAttached = true;
+
+  // touch
+  document.addEventListener('touchstart', (e)=>{
+    if(!canSwipe()) return;
+    isDown = true;
+    startX = e.touches[0].clientX;
+    lastX = startX;
+    lastTime = performance.now();
+    vel = 0;
+  }, {passive:true});
+
+  document.addEventListener('touchmove', (e)=>{
+    if(!isDown || !canSwipe()) return;
+    const x = e.touches[0].clientX;
+    const dt = Math.max(1, performance.now() - lastTime);
+    vel = (x - lastX) / dt; // px/ms
+    lastX = x;
+    lastTime = performance.now();
+    const delta = x - startX;
+    carousel.style.transition = 'none';
+    carousel.style.transform = `translateX(${delta}px)`;
+  }, {passive:true});
+
+  document.addEventListener('touchend', (e)=>{
+    if(!isDown || !canSwipe()) return;
+    isDown = false;
+    carousel.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1)';
+    // velocity px/ms -> px/s multiply by 1000
+    const vpxs = vel * 1000;
+    const diff = lastX - startX;
+
+    // inertia decision thresholds (tuned)
+    if(vpxs < -600 && current < memories.length -1){
+      current++;
+    } else if(vpxs > 600 && current > 0){
+      current--;
+    } else {
+      if(diff < -100 && current < memories.length -1) current++;
+      else if(diff > 100 && current > 0) current--;
+    }
+
+    carousel.style.transform = 'translateX(0px)';
+    setTimeout(()=>{ carousel.style.transition = ''; render(); }, 560);
+  }, {passive:true});
+
+  // mouse desktop
+  document.addEventListener('mousedown', (e)=>{
+    if(!canSwipe()) return;
+    isDown = true;
+    startX = e.clientX;
+    lastX = startX;
+    lastTime = performance.now();
+    vel = 0;
+  });
+
+  document.addEventListener('mousemove', (e)=>{
+    if(!isDown || !canSwipe()) return;
+    const x = e.clientX;
+    const dt = Math.max(1, performance.now() - lastTime);
+    vel = (x - lastX) / dt;
+    lastX = x;
+    lastTime = performance.now();
+    const delta = x - startX;
+    carousel.style.transition = 'none';
+    carousel.style.transform = `translateX(${delta}px)`;
+  });
+
+  document.addEventListener('mouseup', (e)=>{
+    if(!isDown || !canSwipe()) return;
+    isDown = false;
+    carousel.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1)';
+    const vpxs = vel * 1000;
+    const diff = lastX - startX;
+
+    if(vpxs < -600 && current < memories.length -1){
+      current++;
+    } else if(vpxs > 600 && current > 0){
+      current--;
+    } else {
+      if(diff < -100 && current < memories.length -1) current++;
+      else if(diff > 100 && current > 0) current--;
+    }
+
+    carousel.style.transform = 'translateX(0px)';
+    setTimeout(()=>{ carousel.style.transition = ''; render(); }, 560);
+  });
 }
 
-/* Swipe */
-document.addEventListener("pointerdown",e=>{
-if(memories[current].type==="timeline")return;
-startX=e.clientX;
-isDragging=true;
-});
+function canSwipe(){
+  // allow swipe only when center card is not timeline
+  return memories[current].type !== 'timeline';
+}
 
-document.addEventListener("pointerup",e=>{
-if(!isDragging||memories[current].type==="timeline")return;
-isDragging=false;
-const diff=e.clientX-startX;
-if(diff<-80&&current<memories.length-1)current++;
-if(diff>80&&current>0)current--;
-render();
-});
-
-/* Timeline */
+/* ---------- timeline sequence (runs once per final visit) ---------- */
 function startTimeline(card){
+  if(timelineStarted) return;
+  timelineStarted = true;
 
-const startDate=new Date("2024-05-15");
-const today=new Date();
-const totalDays=Math.floor((today-startDate)/(1000*60*60*24));
+  const startDate = new Date('2024-05-15');
+  const today = new Date();
+  const totalDays = Math.max(0, Math.floor((today - startDate)/(1000*60*60*24)));
 
-card.innerHTML=`
-<div class="date">15 May 2024 → Today</div>
-<div class="timeline-wrapper">
-<div class="timeline" id="line"></div>
-<img src="final3.jpeg" id="milestone" class="milestone">
-</div>
-<div class="counter" id="counter">0 days</div>
-`;
+  card.innerHTML = `
+    <div class="date">15 May 2024 → Today</div>
+    <div class="timeline-wrapper">
+      <div class="timeline" id="line"></div>
+      <img src="final3.jpeg" id="milestone" class="milestone" alt="final">
+    </div>
+    <div class="counter" id="counter">0 days</div>
+  `;
 
-setTimeout(()=>document.getElementById("line").style.width="100%",500);
+  // animate bar
+  setTimeout(()=>{ const L = document.getElementById('line'); if(L) L.style.width = '100%'; }, 500);
 
-const counter=document.getElementById("counter");
-const duration=3000;
-const start=Date.now();
+  // counter smooth
+  const counterEl = document.getElementById('counter');
+  const duration = 3000;
+  const started = performance.now();
+  const counterTick = setInterval(()=>{
+    const p = Math.min(1, (performance.now() - started) / duration);
+    if(counterEl) counterEl.innerText = Math.floor(p * totalDays) + ' days';
+    if(p === 1) clearInterval(counterTick);
+  }, 30);
 
-const interval=setInterval(()=>{
-const progress=Math.min((Date.now()-start)/duration,1);
-counter.innerText=Math.floor(progress*totalDays)+" days";
-if(progress===1)clearInterval(interval);
-},30);
+  // sequential final images
+  const milestone = document.getElementById('milestone');
+  setTimeout(()=>{ if(milestone) milestone.style.opacity = '1'; }, 1400);      // final3 show
+  setTimeout(()=>{ if(milestone) milestone.style.opacity = '0'; }, 3000);      // fade final3
+  setTimeout(()=>{ if(milestone){ milestone.src = 'final2.jpeg'; milestone.style.opacity = '1'; } }, 3800); // final2 show
+  setTimeout(()=>{ if(milestone) milestone.style.opacity = '0'; }, 5200);      // fade final2
+  setTimeout(()=>{ if(milestone){ milestone.src = 'final1.jpeg'; milestone.style.opacity = '1'; } }, 6000); // final1 stay
 
-const milestone=document.getElementById("milestone");
-
-setTimeout(()=>milestone.style.opacity=1,1500);
-setTimeout(()=>milestone.style.opacity=0,3000);
-setTimeout(()=>{milestone.src="final2.jpeg";milestone.style.opacity=1;},3800);
-setTimeout(()=>milestone.style.opacity=0,5200);
-setTimeout(()=>{milestone.src="final1.jpeg";milestone.style.opacity=1;},6000);
-
-setTimeout(()=>{
-document.getElementById("bg").style.transform="scale(1.4)";
-card.innerHTML+=`
-<div class="heart">❤️</div>
-<div class="final-title">Happy Valentine Day ❤️</div>
-<div class="final-text">
-Thank you for being with me.
-<br>Till forever.
-</div>`;
-},7500);
+  // final reveal
+  setTimeout(()=>{
+    bg.style.transform = 'scale(1.42)';
+    card.innerHTML += `
+      <div class="heart">❤️</div>
+      <div class="final-title">Happy Valentine Day ❤️</div>
+      <div class="final-text">Thank you for being with me.<br/>Till forever.</div>
+    `;
+  }, 7600);
 }
+
+/* init background fallback */
+window.addEventListener('load', ()=>{
+  bg.style.backgroundImage = 'url(mem3.jpeg)';
+});
 </script>
 </body>
 </html>

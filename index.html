@@ -8,12 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  overflow:hidden;
-  background:#000;
-  font-family:Arial;
-}
+body{margin:0;overflow:hidden;background:#000;}
 
 /* Background */
 .bg{
@@ -24,16 +19,16 @@ body{
   background-position:center;
   filter:blur(25px) brightness(0.35);
   transform:scale(1.2);
-  transition:1.5s ease;
+  transition:2s ease;
   z-index:-2;
 }
 
-/* Floating particles */
+/* Floating hearts */
 .particle{
   position:fixed;
   bottom:-40px;
   font-size:24px;
-  opacity:0.4;
+  opacity:0.45;
   filter:blur(2px);
   animation:floatUp linear infinite;
   pointer-events:none;
@@ -43,161 +38,119 @@ body{
   to{transform:translateY(-110vh);}
 }
 
-/* 3D Gift */
+/* Gift */
 .scene{
   height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  perspective:1200px;
+  background:#111122;
 }
-.box{
-  width:180px;
-  height:180px;
-  position:relative;
-  transform-style:preserve-3d;
-  cursor:pointer;
-  filter:drop-shadow(0 30px 50px rgba(0,0,0,0.7));
-}
-.face{
-  position:absolute;
-  width:100%;
-  height:100%;
+.box{position:relative;width:200px;height:200px;cursor:pointer;}
+.box-body{
+  width:100%;height:100%;
   background:linear-gradient(145deg,#ff5c8a,#ff2e6a);
-  border:4px solid white;
-  transition:0.6s;
+  border-radius:12px;
+  box-shadow:0 30px 60px rgba(0,0,0,0.7);
+  overflow:hidden;
+  position:relative;
 }
-.lid-top{transform-origin:top;}
-.lid-left{transform-origin:left;}
-.lid-right{transform-origin:right;}
-.lid-front{transform-origin:bottom;}
-
-.ribbon-vertical{
-  position:absolute;
-  width:20px;
-  height:100%;
-  background:white;
-  left:50%;
-  transform:translateX(-50%);
+.box-lid{
+  position:absolute;width:100%;height:100%;
+  background:linear-gradient(145deg,#ff5c8a,#ff2e6a);
+  transform-origin:top;
+  transition:0.8s ease;
 }
-.ribbon-horizontal{
-  position:absolute;
-  height:20px;
-  width:100%;
-  background:white;
-  top:50%;
-  transform:translateY(-50%);
-}
-.bow{
-  position:absolute;
-  width:60px;
-  height:30px;
-  background:white;
-  top:-18px;
-  left:50%;
+.box-bowtie{
+  position:absolute;width:60px;height:30px;
+  background:white;top:-15px;left:50%;
   transform:translateX(-50%);
   border-radius:50%;
 }
-
-/* Bouquet */
-.bouquet-screen{
-  position:fixed;
-  width:100%;
-  height:100%;
-  display:none;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  background:#111122;
-  z-index:5;
+.flower{
+  position:absolute;width:160px;left:50%;
+  bottom:-200px;transform:translateX(-50%);
+  transition:1s cubic-bezier(0.22,1,0.36,1);
 }
-.bouquet img{
-  width:220px;
-  transform:scale(0);
-  animation:pop 1s ease forwards;
+@keyframes shake{
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-5px);}
+  50%{transform:translateX(5px);}
+  75%{transform:translateX(-3px);}
+  100%{transform:translateX(0);}
 }
-@keyframes pop{
-  0%{transform:scale(0);}
-  60%{transform:scale(1.1);}
-  100%{transform:scale(1);}
+.shake{animation:shake 0.5s ease;}
+.petal{
+  position:absolute;font-size:18px;
+  animation:petalFloat linear forwards;
+}
+@keyframes petalFloat{
+  from{transform:translateY(0) rotate(0deg);opacity:1;}
+  to{transform:translateY(-250px) rotate(360deg);opacity:0;}
 }
 
 /* Memory Section */
 .memory-section{
-  display:none;
-  height:100vh;
-  position:relative;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:none;height:100vh;
+  display:flex;align-items:center;justify-content:center;
 }
-
+.carousel{position:relative;width:320px;height:430px;}
 .card{
-  width:300px;
-  background:white;
-  color:black;
-  padding:20px;
+  position:absolute;width:100%;
+  background:white;color:black;
+  padding:20px;border-radius:12px;
   text-align:center;
-  border-radius:10px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+  box-shadow:0 25px 60px rgba(0,0,0,0.6);
+  transition:transform 0.6s ease, opacity 0.6s ease;
 }
-
-.card img,
-.card video{
-  width:100%;
-}
+.card img,.card video{width:100%;border-radius:6px;}
 
 .date{
   font-family:'Playfair Display',serif;
-  font-weight:bold;
-  margin-top:10px;
+  font-weight:bold;margin-top:8px;
 }
-
 .caption{
   font-family:'Dancing Script',cursive;
-  font-weight:600;
-  font-size:20px;
-  margin-top:6px;
+  font-size:22px;margin-top:6px;
 }
 
 /* Timeline */
+.timeline-wrapper{position:relative;margin-top:20px;}
 .timeline{
-  width:0%;
-  height:5px;
+  width:0%;height:6px;
   background:linear-gradient(to right,#ff4f81,#ffffff,#ff4f81);
-  margin:20px auto;
   border-radius:10px;
   transition:3s ease;
 }
+.milestone{
+  position:absolute;width:60px;
+  bottom:-50px;opacity:0;
+  transition:1s ease;
+  border-radius:8px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+#m1{left:20%;}
+#m2{left:50%;transform:translateX(-50%);}
+#m3{right:20%;}
 
 .counter{
   font-family:'Playfair Display',serif;
-  font-weight:bold;
-  font-size:22px;
+  font-weight:bold;font-size:24px;
+  margin-top:20px;
 }
-
-.final-title{
-  font-family:'Playfair Display',serif;
-  font-weight:bold;
-  font-size:24px;
-  margin-top:15px;
-}
-
-.final-text{
-  font-family:'Dancing Script',cursive;
-  font-weight:600;
-  font-size:22px;
-}
-
-.heart{
-  font-size:60px;
-  animation:pulse 1.6s infinite;
-}
+.heart{font-size:70px;animation:pulse 1.6s infinite;}
 @keyframes pulse{
   0%{transform:scale(1);}
-  50%{transform:scale(1.2);}
+  50%{transform:scale(1.25);}
   100%{transform:scale(1);}
+}
+.final-title{
+  font-family:'Playfair Display',serif;
+  font-weight:bold;font-size:26px;margin-top:15px;
+}
+.final-text{
+  font-family:'Dancing Script',cursive;
+  font-size:24px;
 }
 </style>
 </head>
@@ -207,23 +160,18 @@ body{
 <div class="bg" id="bg"></div>
 
 <div class="scene" id="giftScene">
-  <div class="box" onclick="openBox()">
-    <div class="face lid-top"></div>
-    <div class="face lid-left"></div>
-    <div class="face lid-right"></div>
-    <div class="face lid-front"></div>
-    <div class="ribbon-vertical"></div>
-    <div class="ribbon-horizontal"></div>
-    <div class="bow"></div>
+  <div class="box" onclick="openBox()" id="giftBox">
+    <div class="box-body">
+      <img class="flower" src="flowers.png" id="flower">
+      <div class="box-lid" id="lid">
+        <div class="box-bowtie"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="bouquet-screen" id="bouquetScreen">
-  <img src="flowers.png">
-</div>
-
 <div class="memory-section" id="memorySection">
-  <div class="card" id="card"></div>
+  <div class="carousel" id="carousel"></div>
 </div>
 
 <audio id="music" loop>
@@ -232,64 +180,140 @@ body{
 
 <script>
 
-/* Floating particles */
+/* Floating hearts */
 function createParticle(){
   const p=document.createElement("div");
   p.className="particle";
   p.innerHTML=Math.random()>0.5?"❤️":"🌹";
   p.style.left=Math.random()*100+"vw";
-  p.style.fontSize=(20+Math.random()*20)+"px";
-  p.style.animationDuration=(10+Math.random()*10)+"s";
+  p.style.fontSize=(20+Math.random()*25)+"px";
+  p.style.animationDuration=(10+Math.random()*12)+"s";
   document.body.appendChild(p);
   setTimeout(()=>p.remove(),20000);
 }
 setInterval(createParticle,900);
 
 /* Gift */
-let openStep=0;
+let opened=false;
 function openBox(){
-  const faces=document.querySelectorAll(".face");
-  openStep++;
-  if(openStep===1) faces[0].style.transform="rotateX(-120deg)";
-  if(openStep===2) faces[1].style.transform="rotateY(-120deg)";
-  if(openStep===3) faces[2].style.transform="rotateY(120deg)";
-  if(openStep===4){
-    faces[3].style.transform="rotateX(120deg)";
+  if(opened) return;
+  opened=true;
+
+  const box=document.getElementById("giftBox");
+  const lid=document.getElementById("lid");
+  const flower=document.getElementById("flower");
+
+  box.classList.add("shake");
+
+  setTimeout(()=>{
+    lid.style.transform="rotateX(-120deg)";
     setTimeout(()=>{
-      document.getElementById("giftScene").style.display="none";
-      document.getElementById("bouquetScreen").style.display="flex";
-      document.getElementById("music").play();
-      setTimeout(()=>{
-        document.getElementById("bouquetScreen").style.display="none";
-        showFinal();
-      },2500);
-    },800);
+      flower.style.bottom="30px";
+      releasePetals();
+    },400);
+  },500);
+
+  setTimeout(()=>{
+    document.getElementById("giftScene").style.display="none";
+    document.getElementById("memorySection").style.display="flex";
+    document.getElementById("music").play();
+    initCarousel();
+  },3500);
+}
+
+function releasePetals(){
+  for(let i=0;i<12;i++){
+    const petal=document.createElement("div");
+    petal.className="petal";
+    petal.innerHTML="🌸";
+    petal.style.left=40+Math.random()*120+"px";
+    petal.style.bottom="80px";
+    petal.style.animationDuration=2+Math.random()*2+"s";
+    document.querySelector(".box-body").appendChild(petal);
+    setTimeout(()=>petal.remove(),4000);
   }
 }
 
-/* Final */
-function showFinal(){
+/* Memories */
+const memories=[
+  {type:"img",src:"mem1.jpeg",date:"15 May 2024",cap:"The day we started talking."},
+  {type:"img",src:"mem2.jpeg",date:"1 Aug 2024",cap:"Girlfriend’s Day."},
+  {type:"img",src:"mem3.jpeg",date:"28 Sep 2024",cap:"Our first meet up."},
+  {type:"video",src:"memory4.mp4",date:"15 May 2025",cap:"One year together."},
+  {type:"timeline"}
+];
 
-  document.getElementById("memorySection").style.display="flex";
-  document.getElementById("bg").style.backgroundImage="url(mem3.jpeg)";
+let current=0;
+let startX=0;
 
+function initCarousel(){
+  render();
+  updateBG();
+}
+
+function render(){
+  const container=document.getElementById("carousel");
+  container.innerHTML="";
+  const m=memories[current];
+  const card=document.createElement("div");
+  card.className="card";
+
+  if(m.type==="img"){
+    card.innerHTML=`<img src="${m.src}">
+    <div class="date">${m.date}</div>
+    <div class="caption">${m.cap}</div>`;
+  }
+  else if(m.type==="video"){
+    card.innerHTML=`<video controls playsinline>
+    <source src="${m.src}" type="video/mp4">
+    </video>
+    <div class="date">${m.date}</div>
+    <div class="caption">${m.cap}</div>`;
+  }
+  else{
+    startTimeline(card);
+  }
+
+  container.appendChild(card);
+  updateBG();
+}
+
+function updateBG(){
+  const bg=document.getElementById("bg");
+  if(memories[current].src){
+    bg.style.backgroundImage=`url(${memories[current].src})`;
+  }
+}
+
+document.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+document.addEventListener("touchend",e=>{
+  let diff=e.changedTouches[0].clientX-startX;
+  if(diff>50&&current>0){current--;render();}
+  if(diff<-50&&current<memories.length-1){current++;render();}
+});
+
+/* Timeline */
+function startTimeline(card){
   const startDate=new Date("2024-05-15");
   const today=new Date();
   const totalDays=Math.floor((today-startDate)/(1000*60*60*24));
 
-  const card=document.getElementById("card");
-
   card.innerHTML=`
     <div class="date">15 May 2024 → Today</div>
-    <div class="timeline" id="line"></div>
+    <div class="timeline-wrapper">
+      <div class="timeline" id="line"></div>
+      <img src="final3.jpeg" class="milestone" id="m1">
+      <img src="final2.jpeg" class="milestone" id="m2">
+      <img src="final1.jpeg" class="milestone" id="m3">
+    </div>
     <div class="counter" id="counter">0 days</div>
   `;
 
-  setTimeout(()=>{
-    document.getElementById("line").style.width="100%";
-  },300);
+  setTimeout(()=>{document.getElementById("line").style.width="100%";},300);
+  setTimeout(()=>{document.getElementById("m1").style.opacity="1";},1000);
+  setTimeout(()=>{document.getElementById("m2").style.opacity="1";},2000);
+  setTimeout(()=>{document.getElementById("m3").style.opacity="1";},3000);
 
-  /* Count up animation */
   let count=0;
   const counterEl=document.getElementById("counter");
   const interval=setInterval(()=>{
@@ -302,7 +326,7 @@ function showFinal(){
   },40);
 
   setTimeout(()=>{
-    document.getElementById("bg").style.transform="scale(1.35)";
+    document.getElementById("bg").style.transform="scale(1.4)";
     card.innerHTML+=`
       <div class="heart">❤️</div>
       <div class="final-title">Happy Valentine Day ❤️</div>
@@ -311,9 +335,8 @@ function showFinal(){
         Till forever.
       </div>
     `;
-  },3500);
+  },4500);
 }
-
 </script>
 </body>
 </html>

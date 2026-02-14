@@ -8,9 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
 <style>
-  :root { --accent:#ff4f81; --bg-dim: rgba(0,0,0,0.35); }
+  :root {
+    --accent: #ff4f81;
+    --bg-brightness: 0.36;
+    --bg-blur: 18px;
+    --card-max-width: 420px;
+  }
+
   html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#000;overflow:hidden}
-  .bg{position:fixed;inset:0;background:#111 center/cover no-repeat;filter:blur(24px) brightness(0.36);transform:scale(1.18);transition:transform 1.2s ease, background-image 0.8s ease;z-index:-2}
+  .bg{position:fixed;inset:0;background:#111 center/cover no-repeat;filter:blur(var(--bg-blur)) brightness(var(--bg-brightness));transform:scale(1.18);transition:transform 1.2s ease, background-image 0.8s ease, filter 0.6s ease;z-index:-2}
 
   /* particles */
   .particle{position:fixed;bottom:-60px;font-size:24px;opacity:0.45;filter:blur(2px);pointer-events:none;animation:floatUp linear infinite}
@@ -20,30 +26,69 @@
   .scene{height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0f17}
   .box{width:220px;height:220px;cursor:pointer;perspective:900px}
   .box-body{width:100%;height:100%;border-radius:14px;background:linear-gradient(145deg,#ff7aa2,#ff3b7a);position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.7);overflow:visible}
-  .box-lid{position:absolute;inset:0;border-radius:14px;transform-origin:top;transition:transform 0.7s ease}
-  .box-bowtie{position:absolute;width:68px;height:34px;background:#fff;border-radius:40px;top:-20px;left:50%;transform:translateX(-50%)}
-  .flower{position:absolute;left:50%;bottom:-220px;transform:translateX(-50%);width:170px;transition:bottom 0.9s cubic-bezier(0.22,1,0.36,1)}
+  .box-lid{position:absolute;inset:0;border-radius:14px;transform-origin:top;transition:transform 0.7s ease;z-index:40}
+  .box-bowtie{position:absolute;width:68px;height:34px;background:#fff;border-radius:40px;top:-20px;left:50%;transform:translateX(-50%);z-index:45}
+  .flower{position:absolute;left:50%;bottom:-220px;transform:translateX(-50%);width:170px;transition:bottom 0.9s cubic-bezier(0.22,1,0.36,1);z-index:50;pointer-events:none}
   .petal{position:absolute;font-size:18px;pointer-events:none;animation:petalFloat linear forwards}
   @keyframes petalFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(-260px) rotate(360deg);opacity:0}}
 
   /* carousel */
   .memory-section{display:none;height:100vh;display:flex;align-items:center;justify-content:center;perspective:1200px}
-  .carousel{position:relative;width:100%;max-width:920px;height:460px;display:flex;align-items:center;justify-content:center;overflow:visible}
-  .card{position:absolute;width:320px;background:#fff;color:#111;border-radius:12px;padding:18px;text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.55);transition:transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.6s ease, opacity 0.6s ease}
-  .card img,.card iframe{width:100%;height:auto;border-radius:8px;display:block}
-  .date{font-family:'Playfair Display',serif;font-weight:700;margin-top:10px}
-  .caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:8px;white-space:pre-line;color:#222}
+  .carousel{position:relative;width:100%;max-width:980px;height:460px;display:flex;align-items:center;justify-content:center;overflow:visible}
+  /* responsive card width (never too big) */
+  .card{
+    position:absolute;
+    width: min(86vw, var(--card-max-width));
+    max-width: var(--card-max-width);
+    background:#fff;color:#111;border-radius:12px;padding:16px;
+    text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.55);
+    transition:transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.6s ease, opacity 0.6s ease;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  /* media area sizing: keep images/videos from growing too tall */
+  .card-media{
+    width:100%;
+    max-height:52vh; /* never taller than viewport portion */
+    min-height:120px;
+    border-radius:8px;
+    overflow:hidden;
+    display:block;
+  }
+  .card-media img{
+    width:100%;
+    height:100%;
+    object-fit:cover; /* consistent framing */
+    display:block;
+  }
+  .card-media iframe{
+    width:100%;
+    height: min(40vh, 300px); /* responsive clamp */
+    border:0;
+    display:block;
+  }
+
+  .date{font-family:'Playfair Display',serif;font-weight:700;margin-top:6px}
+  .caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:4px;white-space:pre-line;color:#222;line-height:1.18}
 
   /* timeline */
-  .timeline-wrapper{position:relative;margin-top:16px}
+  .timeline-wrapper{position:relative;margin-top:12px}
   .timeline{width:0%;height:6px;background:linear-gradient(90deg,var(--accent),#fff,var(--accent));border-radius:10px;transition:width 3s ease}
   .milestone{position:absolute;width:140px;left:50%;transform:translateX(-50%);bottom:-90px;opacity:0;transition:opacity 0.9s ease}
-  .counter{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;margin-top:16px}
-  .heart{font-size:68px;margin-top:12px;animation:pulse 1.6s infinite}
+  .counter{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;margin-top:12px}
+  .heart{font-size:66px;margin-top:12px;animation:pulse 1.6s infinite}
   @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
-  .final-title{font-family:'Playfair Display',serif;font-weight:700;font-size:26px;margin-top:8px}
-  .final-text{font-family:'Dancing Script',cursive;font-size:22px;margin-top:8px}
-  @media (max-width:520px){.card{width:88vw}.milestone{width:110px}}
+  .final-title{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;margin-top:8px}
+  .final-text{font-family:'Dancing Script',cursive;font-size:20px;margin-top:6px}
+
+  @media (max-width:520px){
+    :root { --card-max-width: 360px; }
+    .card{padding:14px}
+    .caption{font-size:18px}
+    .card-media iframe{height: calc(36vh)}
+  }
 </style>
 </head>
 <body>
@@ -52,9 +97,9 @@
 
 <!-- Gift -->
 <div class="scene" id="giftScene">
-  <div class="box" id="giftBox" role="button" aria-label="Open gift" tabindex="0">
+  <div class="box" id="giftBox" role="button" tabindex="0" aria-label="Open gift">
     <div class="box-body">
-      <img src="flowers.png" id="flower" class="flower" alt="bouquet">
+      <img class="flower" src="flowers.png" id="flower" alt="bouquet">
       <div class="box-lid" id="lid"></div>
       <div class="box-bowtie"></div>
     </div>
@@ -71,11 +116,11 @@
 </audio>
 
 <script>
-/* --------- helpers & globals --------- */
-const timelineIndex = 4; // index of timeline card in memories array (0-based)
+/* ---------- globals ---------- */
+const timelineIndex = 4;
 let timelineStarted = false;
 
-/* floating hearts particles */
+/* spawn particles */
 function spawnParticle(){
   const el = document.createElement('div'); el.className='particle';
   el.innerText = Math.random()>0.5 ? '❤️' : '🌹';
@@ -87,16 +132,16 @@ function spawnParticle(){
 }
 setInterval(spawnParticle,900);
 
-/* --------- gift interaction --------- */
+/* --------- gift open flow --------- */
+const giftBox = document.getElementById('giftBox');
 const lid = document.getElementById('lid');
 const flower = document.getElementById('flower');
-const giftBox = document.getElementById('giftBox');
 
 function releasePetals(){
   const body = document.querySelector('.box-body');
   for(let i=0;i<12;i++){
     const p = document.createElement('div');
-    p.className='petal'; p.innerText='🌸';
+    p.className = 'petal'; p.innerText='🌸';
     p.style.left = (20 + Math.random()*160) + 'px';
     p.style.bottom = '60px';
     p.style.fontSize = (14 + Math.random()*12) + 'px';
@@ -107,22 +152,27 @@ function releasePetals(){
 }
 
 function openBox(){
-  // anticipation shake
+  // shake a bit
   giftBox.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:420,easing:'ease',iterations:1});
-  setTimeout(()=>{ lid.style.transform='rotateX(-120deg)'; },420);
-  setTimeout(()=>{ flower.style.bottom='28px'; releasePetals(); },850);
+  // flip lid
+  setTimeout(()=>{ lid.style.transform = 'rotateX(-120deg)'; }, 420);
+  // hide lid so bouquet is visible
+  setTimeout(()=>{ lid.style.display = 'none'; }, 900);
+  // bring flower up
+  setTimeout(()=>{ flower.style.bottom = '28px'; releasePetals(); }, 950);
+  // show memories after slight delay
   setTimeout(()=>{
     document.getElementById('giftScene').style.display='none';
     document.getElementById('memorySection').style.display='flex';
-    document.getElementById('music').play().catch(()=>{}); // may require user tap
+    document.getElementById('music').play().catch(()=>{});
     initCarousel();
-  },1700);
+  }, 1700);
 }
 
 giftBox.addEventListener('click', openBox);
 giftBox.addEventListener('keydown', e=>{ if(e.key==='Enter') openBox(); });
 
-/* --------- memories data (personal, short lines) --------- */
+/* ---------- memories (personal captions) ---------- */
 const memories = [
   {
     type:'img',
@@ -164,18 +214,18 @@ That’s what matters.`
   { type:'timeline' }
 ];
 
-/* ---------- carousel engine with natural swipe ---------- */
+/* ---------- carousel engine ---------- */
 let current = 0;
 const carousel = document.getElementById('carousel');
 const bg = document.getElementById('bg');
 
 function initCarousel(){
+  // set bg to current memory now (so gift sits on top of right photo)
+  updateBG();
   render();
-  // attach pointer fallback listeners in render's setup
-  setupSwipe(); // safe to call (function idempotent)
+  setupSwipe();
 }
 
-/* render cards */
 function render(){
   carousel.innerHTML = '';
   memories.forEach((m,i)=>{
@@ -183,7 +233,7 @@ function render(){
     card.className = 'card';
     const offset = i - current;
 
-    // position + depth
+    // transform + depth
     const tx = offset * 360;
     const scale = offset === 0 ? 1 : 0.82;
     const rotateY = offset * 10;
@@ -194,49 +244,48 @@ function render(){
 
     // content
     if(m.type === 'img'){
-      card.innerHTML = `<img src="${m.src}" alt=""><div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
+      card.innerHTML = `<div class="card-media"><img src="${m.src}" alt=""></div>
+        <div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
     } else if(m.type === 'video'){
-      card.innerHTML = `<iframe src="${m.src}" frameborder="0" height="220" style="border-radius:8px" allow="autoplay; fullscreen"></iframe>
+      card.innerHTML = `<div class="card-media"><iframe src="${m.src}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
         <div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
     } else if(m.type === 'timeline'){
-      // append and then initialize timeline on the appended card
       card.innerHTML = `<div class="date">Loading...</div>`;
-      // we'll call startTimeline after append
     }
 
     carousel.appendChild(card);
 
-    // if timeline card, start timeline after it's in DOM
-    if(m.type === 'timeline' && i === current){
-      // start slightly after append to guarantee DOM
-      setTimeout(()=>startTimeline(card), 50);
+    // if timeline card is center, start timeline after DOM append
+    if(m.type === 'timeline' && i === current && !timelineStarted){
+      setTimeout(()=>startTimeline(card), 60);
     }
   });
 
   updateBG();
 }
 
-/* update blurred background */
 function updateBG(){
   const m = memories[current];
   if(m && m.type === 'img' && m.src){
     bg.style.backgroundImage = `url(${m.src})`;
+    bg.style.filter = `blur(var(--bg-blur)) brightness(var(--bg-brightness))`;
   } else {
     bg.style.backgroundImage = `url(mem3.jpeg)`;
+    bg.style.filter = `blur(var(--bg-blur)) brightness(var(--bg-brightness))`;
   }
 }
 
-/* ---------- swipe with inertia-like feel (touch + mouse) ---------- */
+/* ---------- swipe with velocity/inertia feel (touch + mouse) ---------- */
 let startX = 0;
 let lastX = 0;
 let lastTime = 0;
 let isDown = false;
 let vel = 0;
-let swipeAttached = false;
+let swipeBound = false;
 
 function setupSwipe(){
-  if(swipeAttached) return;
-  swipeAttached = true;
+  if(swipeBound) return;
+  swipeBound = true;
 
   // touch
   document.addEventListener('touchstart', (e)=>{
@@ -252,7 +301,7 @@ function setupSwipe(){
     if(!isDown || !canSwipe()) return;
     const x = e.touches[0].clientX;
     const dt = Math.max(1, performance.now() - lastTime);
-    vel = (x - lastX) / dt; // px/ms
+    vel = (x - lastX) / dt;
     lastX = x;
     lastTime = performance.now();
     const delta = x - startX;
@@ -264,11 +313,9 @@ function setupSwipe(){
     if(!isDown || !canSwipe()) return;
     isDown = false;
     carousel.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1)';
-    // velocity px/ms -> px/s multiply by 1000
     const vpxs = vel * 1000;
     const diff = lastX - startX;
 
-    // inertia decision thresholds (tuned)
     if(vpxs < -600 && current < memories.length -1){
       current++;
     } else if(vpxs > 600 && current > 0){
@@ -282,7 +329,7 @@ function setupSwipe(){
     setTimeout(()=>{ carousel.style.transition = ''; render(); }, 560);
   }, {passive:true});
 
-  // mouse desktop
+  // mouse
   document.addEventListener('mousedown', (e)=>{
     if(!canSwipe()) return;
     isDown = true;
@@ -326,11 +373,11 @@ function setupSwipe(){
 }
 
 function canSwipe(){
-  // allow swipe only when center card is not timeline
+  // disable swipe when center is timeline card
   return memories[current].type !== 'timeline';
 }
 
-/* ---------- timeline sequence (runs once per final visit) ---------- */
+/* ---------- timeline sequence ---------- */
 function startTimeline(card){
   if(timelineStarted) return;
   timelineStarted = true;
@@ -348,26 +395,26 @@ function startTimeline(card){
     <div class="counter" id="counter">0 days</div>
   `;
 
-  // animate bar
+  // bar animate
   setTimeout(()=>{ const L = document.getElementById('line'); if(L) L.style.width = '100%'; }, 500);
 
-  // counter smooth
+  // counter
   const counterEl = document.getElementById('counter');
   const duration = 3000;
-  const started = performance.now();
-  const counterTick = setInterval(()=>{
-    const p = Math.min(1, (performance.now() - started) / duration);
+  const s = performance.now();
+  const tick = setInterval(()=>{
+    const p = Math.min(1, (performance.now() - s) / duration);
     if(counterEl) counterEl.innerText = Math.floor(p * totalDays) + ' days';
-    if(p === 1) clearInterval(counterTick);
+    if(p === 1) clearInterval(tick);
   }, 30);
 
-  // sequential final images
+  // sequential images
   const milestone = document.getElementById('milestone');
-  setTimeout(()=>{ if(milestone) milestone.style.opacity = '1'; }, 1400);      // final3 show
-  setTimeout(()=>{ if(milestone) milestone.style.opacity = '0'; }, 3000);      // fade final3
-  setTimeout(()=>{ if(milestone){ milestone.src = 'final2.jpeg'; milestone.style.opacity = '1'; } }, 3800); // final2 show
-  setTimeout(()=>{ if(milestone) milestone.style.opacity = '0'; }, 5200);      // fade final2
-  setTimeout(()=>{ if(milestone){ milestone.src = 'final1.jpeg'; milestone.style.opacity = '1'; } }, 6000); // final1 stay
+  setTimeout(()=>{ if(milestone) milestone.style.opacity = '1'; }, 1400);
+  setTimeout(()=>{ if(milestone) milestone.style.opacity = '0'; }, 3000);
+  setTimeout(()=>{ if(milestone){ milestone.src = 'final2.jpeg'; milestone.style.opacity = '1'; } }, 3800);
+  setTimeout(()=>{ if(milestone) milestone.style.opacity = '0'; }, 5200);
+  setTimeout(()=>{ if(milestone){ milestone.src = 'final1.jpeg'; milestone.style.opacity = '1'; } }, 6000);
 
   // final reveal
   setTimeout(()=>{
@@ -380,9 +427,10 @@ function startTimeline(card){
   }, 7600);
 }
 
-/* init background fallback */
+/* ---------- initial background and fallback ---------- */
 window.addEventListener('load', ()=>{
-  bg.style.backgroundImage = 'url(mem3.jpeg)';
+  const first = (memories[0] && memories[0].src) ? memories[0].src : 'mem3.jpeg';
+  bg.style.backgroundImage = `url(${first})`;
 });
 </script>
 </body>

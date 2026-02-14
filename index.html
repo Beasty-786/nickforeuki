@@ -8,71 +8,207 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
 <style>
-  :root{ --accent:#ff4f81; --bg-blur:18px; --card-max-width:420px; }
-  html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#000;overflow:hidden}
-
-/* BACKGROUND (simple & Safari-safe) */
-.bg{
-  position:fixed; inset:0; z-index:-2;
-  background-size:cover; background-position:center; background-repeat:no-repeat;
-  filter: blur(var(--bg-blur)) brightness(0.6);
-}
-
-/* small debug badge bottom-left */
-#dbgBadge{
-  position:fixed; left:12px; bottom:12px; z-index:9999;
-  background:rgba(0,0,0,0.45); color:#fff; font-size:12px; padding:8px 10px;
-  border-radius:10px; backdrop-filter: blur(4px);
-  max-width:38vw; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+html,body{
+  height:100%;
+  margin:0;
   font-family:Arial,Helvetica,sans-serif;
+  overflow:hidden;
+  background:#000;
 }
 
-/* rest of styles (gift, carousel, timeline) - kept compact */
-.particle{position:fixed;bottom:-60px;font-size:24px;opacity:0.45;filter:blur(1px);pointer-events:none;animation:floatUp linear infinite}
-@keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-120vh)}}
+/* REAL IMAGE BACKGROUND (Safari safe) */
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  overflow:hidden;
+}
 
-.scene{height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
-.tap-text{position:absolute;top:16vh;color:#fff;font-size:18px;font-weight:600}
-.box{width:220px;height:220px;perspective:900px;cursor:pointer}
-.box-body{width:100%;height:100%;border-radius:14px;background:linear-gradient(145deg,#ff7aa2,#ff3b7a);position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.7);overflow:visible}
-.box-lid{position:absolute;inset:0;border-radius:14px;transform-origin:top;transition:transform 0.7s ease;z-index:40;background:linear-gradient(145deg,#ff7aa2,#ff3b7a)}
-.box-bowtie{position:absolute;width:68px;height:34px;background:#fff;border-radius:40px;top:-20px;left:50%;transform:translateX(-50%);z-index:45}
-.flower{position:absolute;left:50%;bottom:-220px;transform:translateX(-50%);width:170px;transition:bottom 0.9s cubic-bezier(0.22,1,0.36,1),opacity 0.6s ease;z-index:35;pointer-events:none;opacity:0}
-.petal{position:absolute;font-size:18px;pointer-events:none;animation:petalFloat linear forwards}
-@keyframes petalFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(-260px) rotate(360deg);opacity:0}}
+.bg img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:blur(20px) brightness(0.55);
+  transform:scale(1.1);
+}
 
-.memory-section{display:none;height:100vh;display:flex;align-items:center;justify-content:center;perspective:1200px}
-.carousel{position:relative;width:100%;max-width:980px;height:520px;display:flex;align-items:center;justify-content:center;overflow:visible}
-.card{position:absolute;width:min(86vw,var(--card-max-width));max-width:var(--card-max-width);background:#fff;color:#111;border-radius:12px;padding:14px;text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.55);transition:transform .6s cubic-bezier(.22,1,.36,1),filter .6s,opacity .6s;display:flex;flex-direction:column;gap:10px}
-.card-media{width:100%;max-height:52vh;min-height:120px;border-radius:8px;overflow:hidden}
-.card-media img{width:100%;height:100%;object-fit:cover;display:block}
-.card-media iframe{width:100%;height:min(40vh,320px);border:0;display:block}
-.date{font-family:'Playfair Display',serif;font-weight:700;margin-top:6px}
-.caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:4px;white-space:pre-line;color:#222;line-height:1.18}
+/* floating particles */
+.particle{
+  position:fixed;
+  bottom:-60px;
+  font-size:22px;
+  opacity:0.5;
+  pointer-events:none;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+  from{transform:translateY(0)}
+  to{transform:translateY(-120vh)}
+}
 
-.timeline-wrapper{position:relative;margin-top:12px}
-.timeline{width:0%;height:6px;background:linear-gradient(90deg,var(--accent),#fff,var(--accent));border-radius:10px;transition:width 3s ease}
-.milestone{position:absolute;width:140px;left:50%;transform:translateX(-50%) scale(0.7);bottom:-90px;opacity:0;transition:opacity .8s,transform .8s}
-.counter{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;margin-top:12px}
-.heart{font-size:66px;margin-top:12px;animation:pulse 1.6s infinite}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
-.final-title{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;margin-top:8px}
-.final-text{font-family:'Dancing Script',cursive;font-size:20px;margin-top:6px}
+/* gift */
+.scene{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+.tap-text{
+  position:absolute;
+  top:16vh;
+  color:#fff;
+  font-size:18px;
+  font-weight:600;
+}
+.box{
+  width:220px;
+  height:220px;
+  perspective:900px;
+  cursor:pointer;
+}
+.box-body{
+  width:100%;
+  height:100%;
+  border-radius:14px;
+  background:linear-gradient(145deg,#ff7aa2,#ff3b7a);
+  position:relative;
+  box-shadow:0 30px 80px rgba(0,0,0,0.7);
+}
+.box-lid{
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  transform-origin:top;
+  transition:transform 0.7s ease;
+  background:linear-gradient(145deg,#ff7aa2,#ff3b7a);
+}
+.box-bowtie{
+  position:absolute;
+  width:68px;
+  height:34px;
+  background:#fff;
+  border-radius:40px;
+  top:-20px;
+  left:50%;
+  transform:translateX(-50%);
+}
+.flower{
+  position:absolute;
+  left:50%;
+  bottom:-220px;
+  transform:translateX(-50%);
+  width:170px;
+  opacity:0;
+  transition:bottom 0.9s ease, opacity 0.6s ease;
+}
 
-@media (max-width:520px){:root{--card-max-width:360px}.caption{font-size:18px}.card-media iframe{height:calc(36vh)}}
+/* carousel */
+.memory-section{
+  display:none;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:1200px;
+}
+.carousel{
+  position:relative;
+  width:100%;
+  max-width:900px;
+  height:520px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.card{
+  position:absolute;
+  width:85vw;
+  max-width:420px;
+  background:#fff;
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  box-shadow:0 30px 70px rgba(0,0,0,0.6);
+  transition:transform .6s cubic-bezier(.22,1,.36,1),opacity .6s,filter .6s;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.card-media{
+  width:100%;
+  max-height:50vh;
+  border-radius:8px;
+  overflow:hidden;
+}
+.card-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.card-media iframe{
+  width:100%;
+  height:320px;
+  border:0;
+}
+.date{
+  font-family:'Playfair Display',serif;
+  font-weight:700;
+}
+.caption{
+  font-family:'Dancing Script',cursive;
+  font-size:20px;
+  white-space:pre-line;
+}
+
+/* timeline */
+.timeline{
+  width:0%;
+  height:6px;
+  background:linear-gradient(90deg,#ff4f81,#fff,#ff4f81);
+  border-radius:10px;
+  transition:width 3s ease;
+}
+.counter{
+  font-family:'Playfair Display',serif;
+  font-weight:700;
+  font-size:22px;
+  margin-top:10px;
+}
+.heart{
+  font-size:64px;
+  margin-top:10px;
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.25)}
+  100%{transform:scale(1)}
+}
+.final-title{
+  font-family:'Playfair Display',serif;
+  font-weight:700;
+  font-size:24px;
+}
+.final-text{
+  font-family:'Dancing Script',cursive;
+  font-size:20px;
+}
 </style>
 </head>
 <body>
 
-<div class="bg" id="bg"></div>
-<div id="dbgBadge" aria-hidden="true">bg: detecting…</div>
+<!-- REAL BLURRED BACKGROUND IMAGE -->
+<div class="bg">
+  <img id="bgImg" src="./mem1.jpeg" alt="">
+</div>
 
 <!-- Gift -->
 <div class="scene" id="giftScene">
-  <div class="tap-text" id="tapText">Tap on me</div>
-  <div class="box" id="giftBox" role="button" tabindex="0" aria-label="Open gift">
+  <div class="tap-text">Tap on me</div>
+  <div class="box" id="giftBox">
     <div class="box-body">
-      <img class="flower" src="./flowers.png" id="flower" alt="bouquet">
+      <img class="flower" src="./flowers.png" id="flower">
       <div class="box-lid" id="lid"></div>
       <div class="box-bowtie"></div>
     </div>
@@ -84,263 +220,114 @@
   <div class="carousel" id="carousel"></div>
 </div>
 
-<audio id="music" loop preload="auto"><source src="./athousandyears.mp3" type="audio/mpeg"></audio>
+<audio id="music" loop>
+  <source src="./athousandyears.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-/* -------------------------
-   Data (use repo-root exact filenames)
-   ------------------------- */
 const memories = [
-  { type:'img',  src:'./mem1.jpeg', date:'15 May 2024', cap:`The day we started talking.\nI didn’t know you would become this important.\nIt started normal.\nNow it’s us.` },
-  { type:'img',  src:'./mem2.jpeg', date:'01 Aug 2024', cap:`Girlfriend's Day.\nThat small cute cake.\nYou deserved it.` },
-  { type:'img',  src:'./mem3.jpeg', date:'28 Sep 2024', cap:`Our first meet up.\nFinally seeing you in front of me.\nIt felt real.` },
-  { type:'video',src:'https://streamable.com/e/2c6hpr', date:'15 May 2025', cap:`One year together.\nWe fought. We fixed. We stayed.` },
+  { type:'img', src:'./mem1.jpeg', date:'15 May 2024', cap:`The day we started talking.\nNow it’s us.` },
+  { type:'img', src:'./mem2.jpeg', date:'01 Aug 2024', cap:`Girlfriend's Day.\nYou deserved that cake.` },
+  { type:'img', src:'./mem3.jpeg', date:'28 Sep 2024', cap:`Our first meet up.\nIt felt real.` },
+  { type:'video', src:'https://streamable.com/e/2c6hpr', date:'15 May 2025', cap:`One year together.\nWe stayed.` },
   { type:'timeline' }
 ];
 
-/* -------------------------
-   State & refs
-   ------------------------- */
 let current = 0;
 let timelineStarted = false;
-const bg = document.getElementById('bg');
-const dbg = document.getElementById('dbgBadge');
-const carousel = document.getElementById('carousel');
-const giftBox = document.getElementById('giftBox');
-const lid = document.getElementById('lid');
-const flower = document.getElementById('flower');
-const tapText = document.getElementById('tapText');
+const bgImg = document.getElementById("bgImg");
 
-/* -------------------------
-   Particle spawn
-   ------------------------- */
-function spawnParticle(){
-  const el=document.createElement('div'); el.className='particle';
-  el.innerText = Math.random()>0.5 ? '❤️' : '🌹';
-  el.style.left = Math.random()*100 + 'vw';
-  el.style.fontSize = (16 + Math.random()*28) + 'px';
-  el.style.animationDuration = (10 + Math.random()*12) + 's';
-  document.body.appendChild(el);
-  setTimeout(()=>{ try{ el.remove(); }catch(e){} }, 20000);
-}
-setInterval(spawnParticle,900);
-
-/* -------------------------
-   Robust BG loader
-   - tries current memory image (if img)
-   - tries candidate filenames (relative + absolute)
-   - shows debug badge with chosen file
-   ------------------------- */
-function discoverBgCandidate(callback){
-  // candidates to try (order matters)
-  const baseCandidates = [
-    './bg.JPG.jpeg',
-    './bg.JPG',
-    './bg.jpg',
-    './bg.jpeg',
-    './BG.JPG.jpeg',
-    './Bg.JPG.jpeg',
-    './bg.PNG',
-    './bg.png'
-  ];
-
-  // helper to get absolute repo path (works on GitHub Pages)
-  function repoBase(){
-    // if path ends with '/', keep it. e.g. /nickforeuki/
-    const p = location.pathname;
-    return location.origin + p;
-  }
-
-  const tryList = [];
-
-  // 1) try current memory src if an image
-  if(memories[current] && memories[current].type === 'img' && memories[current].src){
-    tryList.push(memories[current].src);
-    // also try absolute variant
-    tryList.push(repoBase() + memories[current].src.replace(/^\.\//,''));
-  }
-
-  // 2) add baseCandidates as relative and absolute
-  baseCandidates.forEach(f=>{
-    tryList.push(f);
-    tryList.push(repoBase() + f.replace(/^\.\//,''));
-  });
-
-  // 3) safe final fallback to repo bg.JPG.jpeg (relative)
-  tryList.push('./bg.JPG.jpeg');
-
-  // remove duplicates while preserving order
-  const seen = new Set();
-  const list = tryList.filter(s => {
-    if(seen.has(s)) return false;
-    seen.add(s); return true;
-  });
-
-  // try loading sequentially
-  let idx = 0;
-  function tryNext(){
-    if(idx >= list.length) return callback(null); // nothing worked
-    const url = list[idx++];
-    const img = new Image();
-    img.onload = () => callback(url);
-    img.onerror = () => tryNext();
-    // set src after handlers
-    img.src = url;
-  }
-  tryNext();
-}
-
-/* wrapper that sets CSS background once a candidate is found */
 function updateBG(){
-  discoverBgCandidate((foundUrl) => {
-    if(foundUrl){
-      // set and show debug
-      bg.style.backgroundImage = `url('${foundUrl}')`;
-      dbg.innerText = `bg: ${foundUrl}`;
-      dbg.style.opacity = '1';
-    } else {
-      // final fallback (no image loaded) - use a solid dark background and inform debug
-      bg.style.backgroundImage = `none`;
-      bg.style.backgroundColor = '#111';
-      dbg.innerText = 'bg: none found (check repo filenames)';
-    }
-  });
-}
-
-/* -------------------------
-   Gift open flow
-   ------------------------- */
-function releasePetals(){
-  const body = document.querySelector('.box-body');
-  for(let i=0;i<12;i++){
-    const p = document.createElement('div'); p.className='petal'; p.innerText='🌸';
-    p.style.left = (20 + Math.random()*160) + 'px';
-    p.style.bottom = '60px';
-    p.style.fontSize = (12 + Math.random()*14) + 'px';
-    p.style.animationDuration = (2 + Math.random()*2) + 's';
-    body.appendChild(p);
-    setTimeout(()=>{ try{ p.remove(); }catch(e){} }, 4200);
+  if(memories[current].type === "img"){
+    bgImg.src = memories[current].src;
   }
 }
 
 function openBox(){
-  tapText.style.opacity = '0';
-  giftBox.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:420,easing:'ease',iterations:1});
-  setTimeout(()=>{ lid.style.transform = 'rotateX(-120deg)'; }, 420);
-  setTimeout(()=>{ lid.style.display = 'none'; }, 900);
-  setTimeout(()=>{ flower.style.opacity = '1'; flower.style.bottom = '28px'; releasePetals(); }, 950);
+  document.getElementById("lid").style.transform = "rotateX(-120deg)";
   setTimeout(()=>{
-    document.getElementById('giftScene').style.display = 'none';
-    document.getElementById('memorySection').style.display = 'flex';
-    document.getElementById('music').play().catch(()=>{});
-    initCarousel();
-  }, 1600);
+    const flower = document.getElementById("flower");
+    flower.style.opacity="1";
+    flower.style.bottom="30px";
+  },600);
+  setTimeout(()=>{
+    document.getElementById("giftScene").style.display="none";
+    document.getElementById("memorySection").style.display="flex";
+    document.getElementById("music").play().catch(()=>{});
+    render();
+  },1500);
 }
-giftBox.addEventListener('click', openBox);
-giftBox.addEventListener('keydown', e => { if(e.key === 'Enter') openBox(); });
+document.getElementById("giftBox").addEventListener("click",openBox);
 
-/* -------------------------
-   Carousel render & swipe (kept from your logic)
-   ------------------------- */
+const carousel = document.getElementById("carousel");
+
 function render(){
-  carousel.innerHTML = '';
+  carousel.innerHTML="";
   memories.forEach((m,i)=>{
-    const card = document.createElement('div'); card.className='card';
-    const offset = i - current;
-    const tx = offset * 360;
-    const scale = offset === 0 ? 1 : 0.82;
-    const rotateY = offset * 10;
-    card.style.transform = `translateX(${tx}px) scale(${scale}) rotateY(${rotateY}deg)`;
-    card.style.opacity = offset === 0 ? '1' : '0.68';
-    card.style.filter = offset === 0 ? 'blur(0px)' : 'blur(4px)';
-    card.style.zIndex = 50 - Math.abs(offset);
+    const card=document.createElement("div");
+    card.className="card";
+    const offset=i-current;
+    card.style.transform=`translateX(${offset*360}px) scale(${offset===0?1:0.8})`;
+    card.style.opacity=offset===0?1:0.6;
+    card.style.filter=offset===0?"blur(0px)":"blur(4px)";
 
-    if(m.type === 'img'){
-      card.innerHTML = `<div class="card-media"><img src="${m.src}" alt=""></div>
-        <div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
-    } else if(m.type === 'video'){
-      card.innerHTML = `<div class="card-media"><iframe src="${m.src}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-        <div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
-    } else if(m.type === 'timeline'){
-      card.innerHTML = `<div class="date">Loading...</div>`;
+    if(m.type==="img"){
+      card.innerHTML=`<div class="card-media"><img src="${m.src}"></div>
+      <div class="date">${m.date}</div>
+      <div class="caption">${m.cap}</div>`;
+    }
+    else if(m.type==="video"){
+      card.innerHTML=`<div class="card-media"><iframe src="${m.src}" allowfullscreen></iframe></div>
+      <div class="date">${m.date}</div>
+      <div class="caption">${m.cap}</div>`;
+    }
+    else if(m.type==="timeline"){
+      card.innerHTML=`<div class="date">15 May 2024 → Today</div>
+      <div class="timeline" id="line"></div>
+      <div class="counter" id="counter">0 days</div>`;
+      startTimeline(card);
     }
 
     carousel.appendChild(card);
-
-    // update background when centered item is an image
-    if(offset === 0 && m.type === 'img'){
-      updateBG();
-    }
-
-    if(m.type === 'timeline' && i === current && !timelineStarted){
-      setTimeout(()=>startTimeline(card), 80);
-    }
   });
-}
-
-let startX = 0, lastX = 0, lastTime = 0, isDown = false, vel = 0, bound = false;
-function setupSwipe(){
-  if(bound) return; bound = true;
-
-  document.addEventListener('touchstart', e => { if(!canSwipe()) return; isDown=true; startX=e.touches[0].clientX; lastX=startX; lastTime=performance.now(); vel=0; }, {passive:true});
-  document.addEventListener('touchmove', e => { if(!isDown||!canSwipe()) return; const x=e.touches[0].clientX; const dt=Math.max(1,performance.now()-lastTime); vel=(x-lastX)/dt; lastX=x; lastTime=performance.now(); const delta=x-startX; carousel.style.transition='none'; carousel.style.transform=`translateX(${delta}px)`; }, {passive:true});
-  document.addEventListener('touchend', e => { if(!isDown||!canSwipe()) return; isDown=false; carousel.style.transition='transform 0.55s cubic-bezier(0.22,1,0.36,1)'; const vpxs=vel*1000; const diff=lastX-startX; if(vpxs<-600 && current < memories.length-1) current++; else if(vpxs>600 && current>0) current--; else { if(diff < -100 && current < memories.length -1) current++; else if(diff > 100 && current > 0) current--; } if(memories[current] && memories[current].type === 'img') updateBG(); carousel.style.transform='translateX(0px)'; setTimeout(()=>{ carousel.style.transition=''; render(); },560); }, {passive:true});
-
-  document.addEventListener('mousedown', e => { if(!canSwipe()) return; isDown=true; startX=e.clientX; lastX=startX; lastTime=performance.now(); vel=0; });
-  document.addEventListener('mousemove', e => { if(!isDown||!canSwipe()) return; const x=e.clientX; const dt=Math.max(1,performance.now()-lastTime); vel=(x-lastX)/dt; lastX=x; lastTime=performance.now(); const delta=x-startX; carousel.style.transition='none'; carousel.style.transform=`translateX(${delta}px)`; });
-  document.addEventListener('mouseup', e => { if(!isDown||!canSwipe()) return; isDown=false; carousel.style.transition='transform 0.55s cubic-bezier(0.22,1,0.36,1)'; const vpxs=vel*1000; const diff=lastX-startX; if(vpxs<-600 && current < memories.length-1) current++; else if(vpxs>600 && current>0) current--; else { if(diff < -100 && current < memories.length -1) current++; else if(diff > 100 && current > 0) current--; } if(memories[current] && memories[current].type === 'img') updateBG(); carousel.style.transform='translateX(0px)'; setTimeout(()=>{ carousel.style.transition=''; render(); },560); });
-}
-function canSwipe(){ return memories[current].type !== 'timeline'; }
-
-/* -------------------------
-   Timeline
-   ------------------------- */
-function startTimeline(card){
-  if(timelineStarted) return; timelineStarted = true;
-  const startDate = new Date('2024-05-15'); const today = new Date();
-  const totalDays = Math.max(0, Math.floor((today - startDate)/(1000*60*60*24)));
-
-  card.innerHTML = `
-    <div class="date">15 May 2024 → Today</div>
-    <div class="timeline-wrapper">
-      <div class="timeline" id="line"></div>
-      <div style="position:relative;height:180px;">
-        <img src="./final1.jpeg" id="m1" class="milestone" style="left:20%;"/>
-        <img src="./final2.jpeg" id="m2" class="milestone" style="left:50%;"/>
-        <img src="./final3.jpeg" id="m3" class="milestone" style="left:80%;"/>
-      </div>
-    </div>
-    <div class="counter" id="counter">0 days</div>
-  `;
-
-  setTimeout(()=>{ const L=document.getElementById('line'); if(L) L.style.width='100%'; }, 500);
-
-  const counterEl = document.getElementById('counter');
-  const dur = 2000; const s = performance.now();
-  const tick = setInterval(()=>{ const p = Math.min(1,(performance.now()-s)/dur); if(counterEl) counterEl.innerText = Math.floor(p * totalDays) + ' days'; if(p === 1) clearInterval(tick); }, 30);
-
-  const m1 = document.getElementById('m1'), m2 = document.getElementById('m2'), m3 = document.getElementById('m3');
-  [m1,m2,m3].forEach((el)=>{ if(!el) return; el.style.position='absolute'; el.style.bottom='-18px'; el.style.opacity='0'; el.style.transform='translateX(-50%) scale(0.6)'; el.style.width='120px'; el.style.borderRadius='8px'; el.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)'; el.style.transition='transform 0.9s cubic-bezier(0.22,1,0.36,1), opacity 0.9s ease'; });
-
-  function bringCenterThenVanish(el, delay){
-    setTimeout(()=>{ if(!el) return; el.style.transform='translateX(-50%) translateY(-20px) scale(1.08)'; el.style.opacity='1'; setTimeout(()=>{ el.style.transform='translateX(-50%) translateY(-80px) scale(0.5)'; el.style.opacity='0'; }, 1000); }, delay);
-  }
-
-  const base = 2300; bringCenterThenVanish(m1, base+200); bringCenterThenVanish(m2, base+1400); bringCenterThenVanish(m3, base+2600);
-
-  setTimeout(()=>{ bg.style.transform='scale(1.42)'; card.innerHTML += `<div style="margin-top:12px;text-align:center"><div class="heart">❤️</div><div class="final-title">Happy Valentine Day ❤️</div><div class="final-text">Thank you for being with me.<br/>Till forever.</div></div>`; }, base+4200);
-}
-
-/* -------------------------
-   Init
-   ------------------------- */
-function initCarousel(){
   updateBG();
-  render();
-  setupSwipe();
 }
 
-window.addEventListener('load', ()=>{ updateBG(); /* show initial bg detection */ });
+/* Swipe */
+let startX=0;
+document.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+document.addEventListener("touchend",e=>{
+  let diff=e.changedTouches[0].clientX-startX;
+  if(diff<-80 && current<memories.length-1) current++;
+  if(diff>80 && current>0) current--;
+  render();
+});
+
+/* Timeline */
+function startTimeline(card){
+  if(timelineStarted) return;
+  timelineStarted=true;
+  const startDate=new Date("2024-05-15");
+  const today=new Date();
+  const totalDays=Math.floor((today-startDate)/(1000*60*60*24));
+  setTimeout(()=>{document.getElementById("line").style.width="100%";},500);
+  let count=0;
+  const counter=document.getElementById("counter");
+  const interval=setInterval(()=>{
+    count+=Math.ceil(totalDays/60);
+    if(count>=totalDays){
+      count=totalDays;
+      clearInterval(interval);
+      card.innerHTML+=`
+      <div class="heart">❤️</div>
+      <div class="final-title">Happy Valentine Day ❤️</div>
+      <div class="final-text">Till forever.</div>`;
+    }
+    counter.innerText=count+" days";
+  },40);
+}
 </script>
 </body>
 </html>

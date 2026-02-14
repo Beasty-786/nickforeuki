@@ -16,17 +16,35 @@
   }
   html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#000;overflow:hidden}
 
-/* BG area: uses CSS background-image (gradient + photo) */
+/* BG area: now contains a real <img> (reliable on iPhone) */
 .bg{
   position:fixed;
   inset:0;
   z-index:-2;
   background-color:#000;
-  background-size:cover;
-  background-position:center;
+  overflow:hidden;
   transform:scale(1.12);
-  filter: blur(var(--bg-blur)) brightness(0.9);
-  transition: background 600ms ease, transform 1.2s ease, filter 600ms ease;
+  transition: transform 1.2s ease;
+}
+.bg img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter: blur(var(--bg-blur)) brightness(0.6);
+  transform:scale(1.12);
+  transition: opacity 420ms ease, transform 1s ease, filter 420ms ease;
+  opacity:1;
+}
+/* overlay darken so foreground reads well */
+.bg::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background: var(--bg-overlay-rgba);
+  pointer-events:none;
+  z-index:1;
 }
 
 /* particles */
@@ -76,7 +94,10 @@
 </head>
 <body>
 
-<div class="bg" id="bg"></div>
+<!-- Background element with real image inside -->
+<div class="bg" id="bg">
+  <img id="bgImage" src="" alt="background image">
+</div>
 
 <!-- Gift -->
 <div class="scene" id="giftScene">
@@ -112,8 +133,9 @@ function spawnParticle(){
   el.style.fontSize = (16 + Math.random()*32) + 'px';
   el.style.animationDuration = (10 + Math.random()*12) + 's';
   document.body.appendChild(el);
-  setTimeout(()=>el.remove(),20000);
+  setTimeout(()=>pRemove(el),20000);
 }
+function pRemove(el){ try{ el.remove(); }catch(e){} }
 setInterval(spawnParticle,900);
 
 /* gift */
@@ -122,6 +144,7 @@ const lid = document.getElementById('lid');
 const flower = document.getElementById('flower');
 const tapText = document.getElementById('tapText');
 const bgEl = document.getElementById('bg');
+const bgImage = document.getElementById('bgImage');
 
 function releasePetals(){
   const body = document.querySelector('.box-body');
@@ -132,7 +155,7 @@ function releasePetals(){
     p.style.fontSize = (14 + Math.random()*12) + 'px';
     p.style.animationDuration = (2 + Math.random()*2) + 's';
     body.appendChild(p);
-    setTimeout(()=>p.remove(),4200);
+    setTimeout(()=>{ try{ p.remove(); }catch(e){} },4200);
   }
 }
 
@@ -165,20 +188,30 @@ const memories = [
 let current = 0;
 const carousel = document.getElementById('carousel');
 
-/* Reliable background setter via element background (gradient + url) */
+/* simple, reliable background setter using the <img> we added */
 function setBgToImage(src){
   if(!src) return;
-  // Build stacked background: gradient overlay on top of photo
-  const overlay = 'linear-gradient(rgba(0,0,0,0.46), rgba(0,0,0,0.46))';
-  // Set background property directly
-  bgEl.style.background = `${overlay}, url("${src}") center / cover no-repeat`;
-  // force repaint for some browsers:
-  void bgEl.offsetWidth;
+  // fade out, change src, fade in
+  try{
+    bgImage.style.opacity = '0';
+  }catch(e){}
+  // small timeout gives opacity transition a chance
+  setTimeout(()=>{
+    bgImage.src = src;
+    bgImage.onload = ()=> {
+      // ensure visible after load
+      bgImage.style.opacity = '1';
+    };
+    bgImage.onerror = ()=> {
+      // fallback: keep previous image (do nothing)
+      console.warn('bg image failed to load:', src);
+      bgImage.style.opacity = '1';
+    };
+  }, 140);
 }
 
 /* init & render */
 function initCarousel(){
-  // set bg to current memory before rendering
   const initial = (memories[current] && memories[current].src) ? memories[current].src : 'mem3.jpeg';
   setBgToImage(initial);
   render();

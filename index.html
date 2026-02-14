@@ -8,186 +8,82 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
 <style>
-html,body{
-  margin:0;
-  height:100%;
-  overflow:hidden;
-  background:#000;
-  font-family:Arial,Helvetica,sans-serif;
-}
+  :root{
+    --accent:#ff4f81;
+    --bg-overlay-rgba: rgba(0,0,0,0.46);
+    --bg-blur: 20px;
+    --card-max-width:420px;
+  }
+  html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#000;overflow:hidden}
 
-/* ===== BACKGROUND (iPhone safe) ===== */
-.bg-wrapper{
+/* BG area: uses CSS background-image (gradient + photo) */
+.bg{
   position:fixed;
   inset:0;
-  z-index:-3;
-  overflow:hidden;
-}
-.bg-wrapper img{
-  position:absolute;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  filter:blur(18px) brightness(0.8);
-  transform:scale(1.15);
-  transition:opacity 0.5s ease, transform 1s ease;
-}
-.bg-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.45);
   z-index:-2;
+  background-color:#000;
+  background-size:cover;
+  background-position:center;
+  transform:scale(1.12);
+  filter: blur(var(--bg-blur)) brightness(0.9);
+  transition: background 600ms ease, transform 1.2s ease, filter 600ms ease;
 }
 
-/* ===== PARTICLES ===== */
-.particle{
-  position:fixed;
-  bottom:-60px;
-  font-size:24px;
-  opacity:0.5;
-  pointer-events:none;
-  animation:floatUp linear infinite;
-}
-@keyframes floatUp{
-  from{transform:translateY(0)}
-  to{transform:translateY(-120vh)}
-}
+/* particles */
+.particle{position:fixed;bottom:-60px;font-size:24px;opacity:0.45;filter:blur(2px);pointer-events:none;animation:floatUp linear infinite}
+@keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-120vh)}}
 
-/* ===== GIFT ===== */
-.scene{
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#0f0f17;
-  position:relative;
-}
-.tap-text{
-  position:absolute;
-  top:15vh;
-  color:white;
-  font-size:18px;
-}
-.box{
-  width:220px;
-  height:220px;
-  perspective:900px;
-  cursor:pointer;
-}
-.box-body{
-  width:100%;
-  height:100%;
-  border-radius:14px;
-  background:linear-gradient(145deg,#ff7aa2,#ff3b7a);
-  box-shadow:0 30px 80px rgba(0,0,0,0.7);
-  position:relative;
-}
-.box-lid{
-  position:absolute;
-  inset:0;
-  background:linear-gradient(145deg,#ff7aa2,#ff3b7a);
-  border-radius:14px;
-  transform-origin:top;
-  transition:0.7s ease;
-}
-.box-bowtie{
-  position:absolute;
-  width:68px;
-  height:34px;
-  background:white;
-  border-radius:40px;
-  top:-20px;
-  left:50%;
-  transform:translateX(-50%);
-}
-.flower{
-  position:absolute;
-  left:50%;
-  bottom:-220px;
-  transform:translateX(-50%);
-  width:170px;
-  opacity:0;
-  transition:1s cubic-bezier(0.22,1,0.36,1);
-}
+/* gift */
+.scene{height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0f17;position:relative}
+.tap-text{position:absolute;top:16vh;color:#fff;font-size:18px;font-weight:600;letter-spacing:0.2px;font-family:Arial,Helvetica,sans-serif;opacity:0.95}
+.box{width:220px;height:220px;cursor:pointer;perspective:900px}
+.box-body{width:100%;height:100%;border-radius:14px;background:linear-gradient(145deg,#ff7aa2,#ff3b7a);position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.7);overflow:visible}
+.box-lid{position:absolute;inset:0;border-radius:14px;transform-origin:top;transition:transform 0.7s ease;z-index:40;background:linear-gradient(145deg,#ff7aa2,#ff3b7a)}
+.box-bowtie{position:absolute;width:68px;height:34px;background:#fff;border-radius:40px;top:-20px;left:50%;transform:translateX(-50%);z-index:45}
+.flower{position:absolute;left:50%;bottom:-220px;transform:translateX(-50%);width:170px;transition:bottom 0.9s cubic-bezier(0.22,1,0.36,1),opacity 0.6s ease;z-index:35;pointer-events:none;opacity:0}
+.petal{position:absolute;font-size:18px;pointer-events:none;animation:petalFloat linear forwards}
+@keyframes petalFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(-260px) rotate(360deg);opacity:0}}
 
-/* ===== CAROUSEL ===== */
-.memory-section{
-  display:none;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  perspective:1200px;
-}
-.carousel{
-  position:relative;
-  width:100%;
-  max-width:900px;
-  height:480px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+/* carousel */
+.memory-section{display:none;height:100vh;display:flex;align-items:center;justify-content:center;perspective:1200px}
+.carousel{position:relative;width:100%;max-width:980px;height:520px;display:flex;align-items:center;justify-content:center;overflow:visible}
 .card{
   position:absolute;
-  width:85vw;
-  max-width:380px;
-  background:white;
-  padding:16px;
-  border-radius:12px;
-  box-shadow:0 30px 70px rgba(0,0,0,0.6);
-  text-align:center;
-  transition:0.6s cubic-bezier(0.22,1,0.36,1);
+  width: min(86vw, var(--card-max-width));
+  max-width: var(--card-max-width);
+  background:#fff;color:#111;border-radius:12px;padding:16px;
+  text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.55);
+  transition:transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.6s ease, opacity 0.6s ease;
+  display:flex;flex-direction:column;gap:10px;
 }
-.card img,
-.card iframe{
-  width:100%;
-  border-radius:8px;
-}
-.date{
-  font-family:'Playfair Display',serif;
-  font-weight:700;
-  margin-top:8px;
-}
-.caption{
-  font-family:'Dancing Script',cursive;
-  font-size:20px;
-  margin-top:6px;
-  white-space:pre-line;
-}
+.card-media{width:100%;max-height:52vh;min-height:120px;border-radius:8px;overflow:hidden}
+.card-media img{width:100%;height:100%;object-fit:cover;display:block}
+.card-media iframe{width:100%;height: min(40vh,320px);border:0;display:block}
+.date{font-family:'Playfair Display',serif;font-weight:700;margin-top:6px}
+.caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:4px;white-space:pre-line;color:#222;line-height:1.18}
 
 /* timeline */
-.counter{
-  font-family:'Playfair Display',serif;
-  font-size:22px;
-  font-weight:700;
-  margin-top:12px;
-}
-.final-title{
-  font-family:'Playfair Display',serif;
-  font-size:24px;
-  font-weight:700;
-}
-.final-text{
-  font-family:'Dancing Script',cursive;
-  font-size:22px;
-}
+.timeline-wrapper{position:relative;margin-top:12px}
+.timeline{width:0%;height:6px;background:linear-gradient(90deg,var(--accent),#fff,var(--accent));border-radius:10px;transition:width 3s ease}
+.milestone{position:absolute;width:140px;left:50%;transform:translateX(-50%) scale(0.7);bottom:-90px;opacity:0;transition:opacity 0.8s ease, transform 0.8s ease}
+.counter{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;margin-top:12px}
+.heart{font-size:66px;margin-top:12px;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+.final-title{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;margin-top:8px}
+.final-text{font-family:'Dancing Script',cursive;font-size:20px;margin-top:6px}
+@media (max-width:520px){:root{--card-max-width:360px} .caption{font-size:18px} .card-media iframe{height:calc(36vh)}}
 </style>
 </head>
 <body>
 
-<!-- Background -->
-<div class="bg-wrapper">
-  <img id="bgImage" src="mem1.jpeg">
-</div>
-<div class="bg-overlay"></div>
+<div class="bg" id="bg"></div>
 
 <!-- Gift -->
 <div class="scene" id="giftScene">
-  <div class="tap-text">Tap on me</div>
-  <div class="box" onclick="openBox()">
+  <div class="tap-text" id="tapText">Tap on me</div>
+  <div class="box" id="giftBox" role="button" tabindex="0" aria-label="Open gift">
     <div class="box-body">
-      <img src="flowers.png" class="flower" id="flower">
+      <img class="flower" src="flowers.png" id="flower" alt="bouquet">
       <div class="box-lid" id="lid"></div>
       <div class="box-bowtie"></div>
     </div>
@@ -199,104 +95,199 @@ html,body{
   <div class="carousel" id="carousel"></div>
 </div>
 
+<audio id="music" loop preload="auto">
+  <source src="athousandyears.mp3" type="audio/mpeg">
+</audio>
+
 <script>
-const bgImage = document.getElementById("bgImage");
+/* ---------- globals ---------- */
+const timelineIndex = 4;
+let timelineStarted = false;
 
-/* ===== PARTICLES ===== */
-setInterval(()=>{
-  const p=document.createElement("div");
-  p.className="particle";
-  p.innerText=Math.random()>0.5?"❤️":"🌹";
-  p.style.left=Math.random()*100+"vw";
-  p.style.fontSize=(20+Math.random()*20)+"px";
-  p.style.animationDuration=(10+Math.random()*10)+"s";
-  document.body.appendChild(p);
-  setTimeout(()=>p.remove(),20000);
-},900);
-
-/* ===== GIFT ===== */
-function openBox(){
-  const lid=document.getElementById("lid");
-  const flower=document.getElementById("flower");
-
-  lid.style.transform="rotateX(-120deg)";
-  setTimeout(()=>{
-    flower.style.bottom="20px";
-    flower.style.opacity="1";
-  },500);
-
-  setTimeout(()=>{
-    document.getElementById("giftScene").style.display="none";
-    document.getElementById("memorySection").style.display="flex";
-    initCarousel();
-  },1500);
+/* particles */
+function spawnParticle(){
+  const el = document.createElement('div'); el.className='particle';
+  el.innerText = Math.random()>0.5 ? '❤️' : '🌹';
+  el.style.left = (Math.random()*100) + 'vw';
+  el.style.fontSize = (16 + Math.random()*32) + 'px';
+  el.style.animationDuration = (10 + Math.random()*12) + 's';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),20000);
 }
+setInterval(spawnParticle,900);
 
-/* ===== MEMORIES ===== */
-const memories=[
-  {type:"img",src:"mem1.jpeg",date:"15 May 2024",cap:"The day we started talking.\nI didn’t know you would become this important."},
-  {type:"img",src:"mem2.jpeg",date:"01 Aug 2024",cap:"Girlfriend's Day.\nThat small cute cake."},
-  {type:"img",src:"mem3.jpeg",date:"28 Sep 2024",cap:"Our first meet up.\nThat day felt different."},
-  {type:"video",src:"https://streamable.com/e/2c6hpr",date:"15 May 2025",cap:"One year together.\nWe stayed."},
-  {type:"timeline"}
-];
+/* gift */
+const giftBox = document.getElementById('giftBox');
+const lid = document.getElementById('lid');
+const flower = document.getElementById('flower');
+const tapText = document.getElementById('tapText');
+const bgEl = document.getElementById('bg');
 
-let current=0;
-const carousel=document.getElementById("carousel");
-
-function initCarousel(){
-  updateBg();
-  render();
-}
-
-function updateBg(){
-  if(memories[current].src){
-    bgImage.src=memories[current].src;
+function releasePetals(){
+  const body = document.querySelector('.box-body');
+  for(let i=0;i<12;i++){
+    const p = document.createElement('div'); p.className = 'petal'; p.innerText='🌸';
+    p.style.left = (20 + Math.random()*160) + 'px';
+    p.style.bottom = '60px';
+    p.style.fontSize = (14 + Math.random()*12) + 'px';
+    p.style.animationDuration = (2 + Math.random()*2) + 's';
+    body.appendChild(p);
+    setTimeout(()=>p.remove(),4200);
   }
 }
 
-function render(){
-  carousel.innerHTML="";
-  memories.forEach((m,i)=>{
-    const card=document.createElement("div");
-    card.className="card";
-    const offset=i-current;
-    card.style.transform=`translateX(${offset*320}px) scale(${offset==0?1:0.8})`;
-    card.style.opacity=offset==0?1:0.6;
+function openBox(){
+  tapText.style.opacity = '0';
+  giftBox.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:420,easing:'ease',iterations:1});
+  setTimeout(()=>{ lid.style.transform = 'rotateX(-120deg)'; }, 420);
+  setTimeout(()=>{ lid.style.display = 'none'; }, 900);
+  setTimeout(()=>{ flower.style.opacity = '1'; flower.style.bottom = '28px'; releasePetals(); }, 950);
+  setTimeout(()=>{
+    document.getElementById('giftScene').style.display = 'none';
+    document.getElementById('memorySection').style.display = 'flex';
+    document.getElementById('music').play().catch(()=>{});
+    initCarousel();
+  }, 1700);
+}
 
-    if(m.type==="img"){
-      card.innerHTML=`<img src="${m.src}"><div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
-    }else if(m.type==="video"){
-      card.innerHTML=`<iframe src="${m.src}" allowfullscreen></iframe><div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
-    }else{
-      startTimeline(card);
+giftBox.addEventListener('click', openBox);
+giftBox.addEventListener('keydown', e=>{ if(e.key==='Enter') openBox(); });
+
+/* memories */
+const memories = [
+  { type:'img', src:'mem1.jpeg', date:'15 May 2024', cap:`The day we started talking.\nI didn’t know you would become this important.\nIt started normal.\nNow it’s us.` },
+  { type:'img', src:'mem2.jpeg', date:'01 Aug 2024', cap:`Girlfriend's Day.\nThat small cute cake.\nI just wanted you to feel special.\nBecause you are.` },
+  { type:'img', src:'mem3.jpeg', date:'28 Sep 2024', cap:`Our first meet up.\nFinally seeing you in front of me.\nNot just a screen.\nThat day felt different.` },
+  { type:'video', src:'https://streamable.com/e/2c6hpr', date:'15 May 2025', cap:`One year together.\nWe fought.\nWe fixed.\nWe stayed.\nThat’s what matters.` },
+  { type:'timeline' }
+];
+
+let current = 0;
+const carousel = document.getElementById('carousel');
+
+/* Reliable background setter via element background (gradient + url) */
+function setBgToImage(src){
+  if(!src) return;
+  // Build stacked background: gradient overlay on top of photo
+  const overlay = 'linear-gradient(rgba(0,0,0,0.46), rgba(0,0,0,0.46))';
+  // Set background property directly
+  bgEl.style.background = `${overlay}, url("${src}") center / cover no-repeat`;
+  // force repaint for some browsers:
+  void bgEl.offsetWidth;
+}
+
+/* init & render */
+function initCarousel(){
+  // set bg to current memory before rendering
+  const initial = (memories[current] && memories[current].src) ? memories[current].src : 'mem3.jpeg';
+  setBgToImage(initial);
+  render();
+  setupSwipe();
+}
+
+function render(){
+  carousel.innerHTML = '';
+  memories.forEach((m,i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    const offset = i - current;
+
+    // position + depth
+    const tx = offset * 360;
+    const scale = offset === 0 ? 1 : 0.82;
+    const rotateY = offset * 10;
+    card.style.transform = `translateX(${tx}px) scale(${scale}) rotateY(${rotateY}deg)`;
+    card.style.opacity = offset === 0 ? '1' : '0.68';
+    card.style.filter = offset === 0 ? 'blur(0px)' : 'blur(4px)';
+    card.style.zIndex = 50 - Math.abs(offset);
+
+    if(m.type === 'img'){
+      card.innerHTML = `<div class="card-media"><img src="${m.src}" alt=""></div>
+        <div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
+    } else if(m.type === 'video'){
+      card.innerHTML = `<div class="card-media"><iframe src="${m.src}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+        <div class="date">${m.date}</div><div class="caption">${m.cap}</div>`;
+    } else if(m.type === 'timeline'){
+      card.innerHTML = `<div class="date">Loading...</div>`;
     }
 
     carousel.appendChild(card);
+
+    // when a card is centered and is an image, update background to match
+    if(offset === 0 && m.type === 'img'){
+      setBgToImage(m.src);
+    }
+
+    // timeline trigger
+    if(m.type === 'timeline' && i === current && !timelineStarted){
+      setTimeout(()=>startTimeline(card), 80);
+    }
   });
 }
 
-/* ===== SIMPLE SWIPE ===== */
-let startX=0;
-document.addEventListener("touchstart",e=>{startX=e.touches[0].clientX});
-document.addEventListener("touchend",e=>{
-  const diff=e.changedTouches[0].clientX-startX;
-  if(diff<-80 && current<memories.length-1) current++;
-  if(diff>80 && current>0) current--;
-  updateBg();
-  render();
-});
+/* swipe */
+let startX = 0, lastX = 0, lastTime = 0, isDown = false, vel = 0, bound = false;
+function setupSwipe(){
+  if(bound) return; bound = true;
 
-/* ===== TIMELINE ===== */
-function startTimeline(card){
-  const start=new Date("2024-05-15");
-  const now=new Date();
-  const days=Math.floor((now-start)/(1000*60*60*24));
-  card.innerHTML=`<div class="counter">${days} days</div>
-  <div class="final-title">Happy Valentine Day ❤️</div>
-  <div class="final-text">Till forever.</div>`;
+  document.addEventListener('touchstart', (e)=>{ if(!canSwipe()) return; isDown=true; startX=e.touches[0].clientX; lastX=startX; lastTime=performance.now(); vel=0; }, {passive:true});
+  document.addEventListener('touchmove', (e)=>{ if(!isDown||!canSwipe()) return; const x=e.touches[0].clientX; const dt=Math.max(1,performance.now()-lastTime); vel=(x-lastX)/dt; lastX=x; lastTime=performance.now(); const delta=x-startX; carousel.style.transition='none'; carousel.style.transform=`translateX(${delta}px)`; }, {passive:true});
+  document.addEventListener('touchend', (e)=>{ if(!isDown||!canSwipe()) return; isDown=false; carousel.style.transition='transform 0.55s cubic-bezier(0.22,1,0.36,1)'; const vpxs=vel*1000; const diff=lastX-startX; if(vpxs<-600 && current < memories.length-1) current++; else if(vpxs>600 && current>0) current--; else { if(diff < -100 && current < memories.length -1) current++; else if(diff > 100 && current > 0) current--; } if(memories[current] && memories[current].type === 'img') setBgToImage(memories[current].src); carousel.style.transform='translateX(0px)'; setTimeout(()=>{ carousel.style.transition=''; render(); },560); }, {passive:true});
+
+  document.addEventListener('mousedown', (e)=>{ if(!canSwipe()) return; isDown=true; startX=e.clientX; lastX=startX; lastTime=performance.now(); vel=0; });
+  document.addEventListener('mousemove', (e)=>{ if(!isDown||!canSwipe()) return; const x=e.clientX; const dt=Math.max(1,performance.now()-lastTime); vel=(x-lastX)/dt; lastX=x; lastTime=performance.now(); const delta=x-startX; carousel.style.transition='none'; carousel.style.transform=`translateX(${delta}px)`; });
+  document.addEventListener('mouseup', (e)=>{ if(!isDown||!canSwipe()) return; isDown=false; carousel.style.transition='transform 0.55s cubic-bezier(0.22,1,0.36,1)'; const vpxs=vel*1000; const diff=lastX-startX; if(vpxs<-600 && current < memories.length-1) current++; else if(vpxs>600 && current>0) current--; else { if(diff < -100 && current < memories.length -1) current++; else if(diff > 100 && current > 0) current--; } if(memories[current] && memories[current].type === 'img') setBgToImage(memories[current].src); carousel.style.transform='translateX(0px)'; setTimeout(()=>{ carousel.style.transition=''; render(); },560); });
 }
-</script>
 
+function canSwipe(){ return memories[current].type !== 'timeline'; }
+
+/* timeline: counter -> images sequence -> final message */
+function startTimeline(card){
+  if(timelineStarted) return; timelineStarted = true;
+
+  const startDate = new Date('2024-05-15');
+  const today = new Date();
+  const totalDays = Math.max(0, Math.floor((today - startDate)/(1000*60*60*24)));
+
+  card.innerHTML = `
+    <div class="date">15 May 2024 → Today</div>
+    <div class="timeline-wrapper">
+      <div class="timeline" id="line"></div>
+      <div style="position:relative;height:180px;">
+        <img src="final1.jpeg" id="m1" class="milestone" style="left:20%;"/>
+        <img src="final2.jpeg" id="m2" class="milestone" style="left:50%;"/>
+        <img src="final3.jpeg" id="m3" class="milestone" style="left:80%;"/>
+      </div>
+    </div>
+    <div class="counter" id="counter">0 days</div>
+  `;
+
+  setTimeout(()=>{ const L=document.getElementById('line'); if(L) L.style.width='100%'; }, 500);
+
+  const counterEl = document.getElementById('counter');
+  const dur = 2000; const s = performance.now();
+  const tick = setInterval(()=>{ const p = Math.min(1,(performance.now()-s)/dur); if(counterEl) counterEl.innerText = Math.floor(p * totalDays) + ' days'; if(p === 1) clearInterval(tick); }, 30);
+
+  const m1 = document.getElementById('m1'), m2 = document.getElementById('m2'), m3 = document.getElementById('m3');
+  [m1,m2,m3].forEach((el)=>{ if(!el) return; el.style.position='absolute'; el.style.bottom='-18px'; el.style.opacity='0'; el.style.transform='translateX(-50%) scale(0.6)'; el.style.width='120px'; el.style.borderRadius='8px'; el.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)'; el.style.transition='transform 0.9s cubic-bezier(0.22,1,0.36,1), opacity 0.9s ease'; });
+
+  function bringCenterThenVanish(el, delay){
+    setTimeout(()=>{ if(!el) return; el.style.transform='translateX(-50%) translateY(-20px) scale(1.08)'; el.style.opacity='1'; setTimeout(()=>{ el.style.transform='translateX(-50%) translateY(-80px) scale(0.5)'; el.style.opacity='0'; }, 1000); }, delay);
+  }
+
+  const base = 2300;
+  bringCenterThenVanish(m1, base + 200);
+  bringCenterThenVanish(m2, base + 1400);
+  bringCenterThenVanish(m3, base + 2600);
+
+  setTimeout(()=>{ bgEl.style.transform = 'scale(1.42)'; card.innerHTML += `<div style="margin-top:12px;text-align:center"><div class="heart">❤️</div><div class="final-title">Happy Valentine Day ❤️</div><div class="final-text">Thank you for being with me.<br/>Till forever.</div></div>`; }, base + 4200);
+}
+
+/* initial: set bg to first memory so gift sits over correct photo */
+window.addEventListener('load', ()=>{
+  const first = (memories[0] && memories[0].src) ? memories[0].src : 'mem3.jpeg';
+  setBgToImage(first);
+});
+</script>
 </body>
 </html>

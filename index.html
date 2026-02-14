@@ -10,73 +10,89 @@
 <style>
   :root{
     --accent:#ff4f81;
-    --bg-brightness:0.28; /* darker */
-    --bg-blur:20px;       /* slightly stronger blur */
+    --bg-overlay: rgba(0,0,0,0.44);
+    --bg-blur: 20px;
     --card-max-width:420px;
-    --bg-overlay: rgba(0,0,0,0.44); /* overlay darkness */
   }
   html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#000;overflow:hidden}
-  /* bg uses gradient overlay + memory image; JS updates background-image property */
-  .bg{
-    position:fixed;
-    inset:0;
-    background: var(--bg-overlay);
-    background-size:cover;
-    background-position:center;
-    filter: blur(var(--bg-blur));
-    transform:scale(1.18);
-    transition: transform 1.2s ease, background-image 0.8s ease, filter 0.6s ease;
-    z-index:-2;
-  }
 
-  /* particles */
-  .particle{position:fixed;bottom:-60px;font-size:24px;opacity:0.45;filter:blur(2px);pointer-events:none;animation:floatUp linear infinite}
-  @keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-120vh)}}
+/* BG: image element + overlay via ::after */
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  overflow:hidden;
+}
+.bg img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:scale(1.12);
+  filter: blur(var(--bg-blur)) brightness(0.9);
+  transition: opacity 0.6s ease, transform 1.2s ease;
+  opacity:1;
+}
+.bg::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--bg-overlay);
+  pointer-events:none;
+}
 
-  /* gift */
-  .scene{height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0f17;position:relative}
-  .tap-text{position:absolute;top:16vh;color:#fff;font-size:18px;font-weight:600;letter-spacing:0.2px;font-family:Arial,Helvetica,sans-serif;opacity:0.95}
-  .box{width:220px;height:220px;cursor:pointer;perspective:900px}
-  .box-body{width:100%;height:100%;border-radius:14px;background:linear-gradient(145deg,#ff7aa2,#ff3b7a);position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.7);overflow:visible}
-  .box-lid{position:absolute;inset:0;border-radius:14px;transform-origin:top;transition:transform 0.7s ease;z-index:40;background:linear-gradient(145deg,#ff7aa2,#ff3b7a)}
-  .box-bowtie{position:absolute;width:68px;height:34px;background:#fff;border-radius:40px;top:-20px;left:50%;transform:translateX(-50%);z-index:45}
-  .flower{position:absolute;left:50%;bottom:-220px;transform:translateX(-50%);width:170px;transition:bottom 0.9s cubic-bezier(0.22,1,0.36,1),opacity 0.6s ease;z-index:35;pointer-events:none;opacity:0}
-  .petal{position:absolute;font-size:18px;pointer-events:none;animation:petalFloat linear forwards}
-  @keyframes petalFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(-260px) rotate(360deg);opacity:0}}
+/* particles */
+.particle{position:fixed;bottom:-60px;font-size:24px;opacity:0.45;filter:blur(2px);pointer-events:none;animation:floatUp linear infinite}
+@keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-120vh)}}
 
-  /* carousel */
-  .memory-section{display:none;height:100vh;display:flex;align-items:center;justify-content:center;perspective:1200px}
-  .carousel{position:relative;width:100%;max-width:980px;height:520px;display:flex;align-items:center;justify-content:center;overflow:visible}
-  .card{
-    position:absolute;
-    width: min(86vw, var(--card-max-width));
-    max-width: var(--card-max-width);
-    background:#fff;color:#111;border-radius:12px;padding:16px;
-    text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.55);
-    transition:transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.6s ease, opacity 0.6s ease;
-    display:flex;flex-direction:column;gap:10px;
-  }
-  .card-media{width:100%;max-height:52vh;min-height:120px;border-radius:8px;overflow:hidden}
-  .card-media img{width:100%;height:100%;object-fit:cover;display:block}
-  .card-media iframe{width:100%;height: min(40vh,320px);border:0;display:block}
-  .date{font-family:'Playfair Display',serif;font-weight:700;margin-top:6px}
-  .caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:4px;white-space:pre-line;color:#222;line-height:1.18}
+/* gift */
+.scene{height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0f17;position:relative}
+.tap-text{position:absolute;top:16vh;color:#fff;font-size:18px;font-weight:600;letter-spacing:0.2px;font-family:Arial,Helvetica,sans-serif;opacity:0.95}
+.box{width:220px;height:220px;cursor:pointer;perspective:900px}
+.box-body{width:100%;height:100%;border-radius:14px;background:linear-gradient(145deg,#ff7aa2,#ff3b7a);position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.7);overflow:visible}
+.box-lid{position:absolute;inset:0;border-radius:14px;transform-origin:top;transition:transform 0.7s ease;z-index:40;background:linear-gradient(145deg,#ff7aa2,#ff3b7a)}
+.box-bowtie{position:absolute;width:68px;height:34px;background:#fff;border-radius:40px;top:-20px;left:50%;transform:translateX(-50%);z-index:45}
+.flower{position:absolute;left:50%;bottom:-220px;transform:translateX(-50%);width:170px;transition:bottom 0.9s cubic-bezier(0.22,1,0.36,1),opacity 0.6s ease;z-index:35;pointer-events:none;opacity:0}
+.petal{position:absolute;font-size:18px;pointer-events:none;animation:petalFloat linear forwards}
+@keyframes petalFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(-260px) rotate(360deg);opacity:0}}
 
-  /* timeline */
-  .timeline-wrapper{position:relative;margin-top:12px}
-  .timeline{width:0%;height:6px;background:linear-gradient(90deg,var(--accent),#fff,var(--accent));border-radius:10px;transition:width 3s ease}
-  .milestone{position:absolute;width:140px;left:50%;transform:translateX(-50%) scale(0.7);bottom:-90px;opacity:0;transition:opacity 0.8s ease, transform 0.8s ease}
-  .counter{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;margin-top:12px}
-  .heart{font-size:66px;margin-top:12px;animation:pulse 1.6s infinite}
-  @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
-  .final-title{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;margin-top:8px}
-  .final-text{font-family:'Dancing Script',cursive;font-size:20px;margin-top:6px}
-  @media (max-width:520px){:root{--card-max-width:360px} .caption{font-size:18px} .card-media iframe{height:calc(36vh)}}
+/* carousel */
+.memory-section{display:none;height:100vh;display:flex;align-items:center;justify-content:center;perspective:1200px}
+.carousel{position:relative;width:100%;max-width:980px;height:520px;display:flex;align-items:center;justify-content:center;overflow:visible}
+.card{
+  position:absolute;
+  width: min(86vw, var(--card-max-width));
+  max-width: var(--card-max-width);
+  background:#fff;color:#111;border-radius:12px;padding:16px;
+  text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.55);
+  transition:transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.6s ease, opacity 0.6s ease;
+  display:flex;flex-direction:column;gap:10px;
+}
+.card-media{width:100%;max-height:52vh;min-height:120px;border-radius:8px;overflow:hidden}
+.card-media img{width:100%;height:100%;object-fit:cover;display:block}
+.card-media iframe{width:100%;height: min(40vh,320px);border:0;display:block}
+.date{font-family:'Playfair Display',serif;font-weight:700;margin-top:6px}
+.caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:4px;white-space:pre-line;color:#222;line-height:1.18}
+
+/* timeline */
+.timeline-wrapper{position:relative;margin-top:12px}
+.timeline{width:0%;height:6px;background:linear-gradient(90deg,var(--accent),#fff,var(--accent));border-radius:10px;transition:width 3s ease}
+.milestone{position:absolute;width:140px;left:50%;transform:translateX(-50%) scale(0.7);bottom:-90px;opacity:0;transition:opacity 0.8s ease, transform 0.8s ease}
+.counter{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;margin-top:12px}
+.heart{font-size:66px;margin-top:12px;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+.final-title{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;margin-top:8px}
+.final-text{font-family:'Dancing Script',cursive;font-size:20px;margin-top:6px}
+@media (max-width:520px){:root{--card-max-width:360px} .caption{font-size:18px} .card-media iframe{height:calc(36vh)}}
 </style>
 </head>
 <body>
 
-<div class="bg" id="bg"></div>
+<!-- Background container with real <img> -->
+<div class="bg" id="bg">
+  <img id="bgImage" src="" alt="background">
+</div>
 
 <!-- Gift -->
 <div class="scene" id="giftScene">
@@ -104,7 +120,7 @@
 const timelineIndex = 4;
 let timelineStarted = false;
 
-/* particles */
+/* particle spawn */
 function spawnParticle(){
   const el = document.createElement('div'); el.className='particle';
   el.innerText = Math.random()>0.5 ? '❤️' : '🌹';
@@ -121,12 +137,12 @@ const giftBox = document.getElementById('giftBox');
 const lid = document.getElementById('lid');
 const flower = document.getElementById('flower');
 const tapText = document.getElementById('tapText');
+const bgImage = document.getElementById('bgImage');
 
 function releasePetals(){
   const body = document.querySelector('.box-body');
   for(let i=0;i<12;i++){
-    const p = document.createElement('div');
-    p.className = 'petal'; p.innerText='🌸';
+    const p = document.createElement('div'); p.className = 'petal'; p.innerText='🌸';
     p.style.left = (20 + Math.random()*160) + 'px';
     p.style.bottom = '60px';
     p.style.fontSize = (14 + Math.random()*12) + 'px';
@@ -155,63 +171,40 @@ giftBox.addEventListener('keydown', e=>{ if(e.key==='Enter') openBox(); });
 
 /* memories */
 const memories = [
-  {
-    type:'img',
-    src:'mem1.jpeg',
-    date:'15 May 2024',
-    cap:`The day we started talking.
-I didn’t know you would become this important.
-It started normal.
-Now it’s us.`
-  },
-  {
-    type:'img',
-    src:'mem2.jpeg',
-    date:'01 Aug 2024',
-    cap:`Girlfriend's Day.
-That small cute cake.
-I just wanted you to feel special.
-Because you are.`
-  },
-  {
-    type:'img',
-    src:'mem3.jpeg',
-    date:'28 Sep 2024',
-    cap:`Our first meet up.
-Finally seeing you in front of me.
-Not just a screen.
-That day felt different.`
-  },
-  {
-    type:'video',
-    src:'https://streamable.com/e/2c6hpr',
-    date:'15 May 2025',
-    cap:`One year together.
-We fought.
-We fixed.
-We stayed.
-That’s what matters.`
-  },
+  { type:'img', src:'mem1.jpeg', date:'15 May 2024', cap:`The day we started talking.\nI didn’t know you would become this important.\nIt started normal.\nNow it’s us.` },
+  { type:'img', src:'mem2.jpeg', date:'01 Aug 2024', cap:`Girlfriend's Day.\nThat small cute cake.\nI just wanted you to feel special.\nBecause you are.` },
+  { type:'img', src:'mem3.jpeg', date:'28 Sep 2024', cap:`Our first meet up.\nFinally seeing you in front of me.\nNot just a screen.\nThat day felt different.` },
+  { type:'video', src:'https://streamable.com/e/2c6hpr', date:'15 May 2025', cap:`One year together.\nWe fought.\nWe fixed.\nWe stayed.\nThat’s what matters.` },
   { type:'timeline' }
 ];
 
 let current = 0;
 const carousel = document.getElementById('carousel');
-const bg = document.getElementById('bg');
 
-/* ensure background uses current memory image with gradient overlay */
+/* Robust background setter using <img> */
 function setBgToImage(src){
-  // overlay darkens the image; keep cover and center
-  const overlay = 'linear-gradient(rgba(0,0,0,0.44), rgba(0,0,0,0.44))';
-  bg.style.backgroundImage = `${overlay}, url(${src})`;
-  bg.style.backgroundSize = 'cover';
-  bg.style.backgroundPosition = 'center';
-  // keep blur via CSS filter
+  if(!src) return;
+  // preload image then fade
+  const temp = new Image();
+  temp.src = src;
+  temp.onload = ()=> {
+    // fade out current
+    bgImage.style.opacity = '0';
+    setTimeout(()=>{
+      bgImage.src = src;
+      // small delay so browser switches src then fade in
+      setTimeout(()=>{ bgImage.style.opacity = '1'; }, 80);
+    }, 160);
+  };
+  temp.onerror = ()=> {
+    // fallback: keep existing bg or use mem3
+    console.warn('bg image failed to load:', src);
+  };
 }
 
-/* init and render */
+/* init & render */
 function initCarousel(){
-  // set bg to current memory before anything
+  // ensure bg uses current memory image before rendering cards
   const initial = (memories[current] && memories[current].src) ? memories[current].src : 'mem3.jpeg';
   setBgToImage(initial);
   render();
@@ -225,6 +218,7 @@ function render(){
     card.className = 'card';
     const offset = i - current;
 
+    // position + depth
     const tx = offset * 360;
     const scale = offset === 0 ? 1 : 0.82;
     const rotateY = offset * 10;
@@ -245,12 +239,12 @@ function render(){
 
     carousel.appendChild(card);
 
-    // if this card is the centered image, set background to its src
+    // when a card is centered and is an image, update background to match
     if(offset === 0 && m.type === 'img'){
       setBgToImage(m.src);
     }
 
-    // start timeline when center
+    // timeline trigger
     if(m.type === 'timeline' && i === current && !timelineStarted){
       setTimeout(()=>startTimeline(card), 80);
     }
@@ -258,112 +252,24 @@ function render(){
 }
 
 /* swipe */
-let startX = 0;
-let lastX = 0;
-let lastTime = 0;
-let isDown = false;
-let vel = 0;
-let bound = false;
-
+let startX = 0, lastX = 0, lastTime = 0, isDown = false, vel = 0, bound = false;
 function setupSwipe(){
-  if(bound) return;
-  bound = true;
+  if(bound) return; bound = true;
 
-  document.addEventListener('touchstart', (e)=>{
-    if(!canSwipe()) return;
-    isDown = true;
-    startX = e.touches[0].clientX;
-    lastX = startX;
-    lastTime = performance.now();
-    vel = 0;
-  }, {passive:true});
+  document.addEventListener('touchstart', (e)=>{ if(!canSwipe()) return; isDown=true; startX=e.touches[0].clientX; lastX=startX; lastTime=performance.now(); vel=0; }, {passive:true});
+  document.addEventListener('touchmove', (e)=>{ if(!isDown||!canSwipe()) return; const x=e.touches[0].clientX; const dt=Math.max(1,performance.now()-lastTime); vel=(x-lastX)/dt; lastX=x; lastTime=performance.now(); const delta=x-startX; carousel.style.transition='none'; carousel.style.transform=`translateX(${delta}px)`; }, {passive:true});
+  document.addEventListener('touchend', (e)=>{ if(!isDown||!canSwipe()) return; isDown=false; carousel.style.transition='transform 0.55s cubic-bezier(0.22,1,0.36,1)'; const vpxs=vel*1000; const diff=lastX-startX; if(vpxs<-600 && current < memories.length-1) current++; else if(vpxs>600 && current>0) current--; else { if(diff < -100 && current < memories.length -1) current++; else if(diff > 100 && current > 0) current--; } if(memories[current] && memories[current].type === 'img') setBgToImage(memories[current].src); carousel.style.transform='translateX(0px)'; setTimeout(()=>{ carousel.style.transition=''; render(); },560); }, {passive:true});
 
-  document.addEventListener('touchmove', (e)=>{
-    if(!isDown || !canSwipe()) return;
-    const x = e.touches[0].clientX;
-    const dt = Math.max(1, performance.now() - lastTime);
-    vel = (x - lastX) / dt;
-    lastX = x;
-    lastTime = performance.now();
-    const delta = x - startX;
-    carousel.style.transition = 'none';
-    carousel.style.transform = `translateX(${delta}px)`;
-  }, {passive:true});
-
-  document.addEventListener('touchend', (e)=>{
-    if(!isDown || !canSwipe()) return;
-    isDown = false;
-    carousel.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1)';
-    const vpxs = vel * 1000;
-    const diff = lastX - startX;
-
-    if(vpxs < -600 && current < memories.length -1) current++;
-    else if(vpxs > 600 && current > 0) current--;
-    else {
-      if(diff < -100 && current < memories.length -1) current++;
-      else if(diff > 100 && current > 0) current--;
-    }
-
-    // after updating current, update background to new memory image (if img) before render
-    if(memories[current] && memories[current].type === 'img'){
-      setBgToImage(memories[current].src);
-    }
-    carousel.style.transform = 'translateX(0px)';
-    setTimeout(()=>{ carousel.style.transition = ''; render(); }, 560);
-  }, {passive:true});
-
-  // mouse
-  document.addEventListener('mousedown', (e)=>{
-    if(!canSwipe()) return;
-    isDown = true;
-    startX = e.clientX;
-    lastX = startX;
-    lastTime = performance.now();
-    vel = 0;
-  });
-
-  document.addEventListener('mousemove', (e)=>{
-    if(!isDown || !canSwipe()) return;
-    const x = e.clientX;
-    const dt = Math.max(1, performance.now() - lastTime);
-    vel = (x - lastX) / dt;
-    lastX = x;
-    lastTime = performance.now();
-    const delta = x - startX;
-    carousel.style.transition = 'none';
-    carousel.style.transform = `translateX(${delta}px)`;
-  });
-
-  document.addEventListener('mouseup', (e)=>{
-    if(!isDown || !canSwipe()) return;
-    isDown = false;
-    carousel.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1)';
-    const vpxs = vel * 1000;
-    const diff = lastX - startX;
-
-    if(vpxs < -600 && current < memories.length -1) current++;
-    else if(vpxs > 600 && current > 0) current--;
-    else {
-      if(diff < -100 && current < memories.length -1) current++;
-      else if(diff > 100 && current > 0) current--;
-    }
-
-    if(memories[current] && memories[current].type === 'img'){
-      setBgToImage(memories[current].src);
-    }
-    carousel.style.transform = 'translateX(0px)';
-    setTimeout(()=>{ carousel.style.transition = ''; render(); }, 560);
-  });
+  document.addEventListener('mousedown', (e)=>{ if(!canSwipe()) return; isDown=true; startX=e.clientX; lastX=startX; lastTime=performance.now(); vel=0; });
+  document.addEventListener('mousemove', (e)=>{ if(!isDown||!canSwipe()) return; const x=e.clientX; const dt=Math.max(1,performance.now()-lastTime); vel=(x-lastX)/dt; lastX=x; lastTime=performance.now(); const delta=x-startX; carousel.style.transition='none'; carousel.style.transform=`translateX(${delta}px)`; });
+  document.addEventListener('mouseup', (e)=>{ if(!isDown||!canSwipe()) return; isDown=false; carousel.style.transition='transform 0.55s cubic-bezier(0.22,1,0.36,1)'; const vpxs=vel*1000; const diff=lastX-startX; if(vpxs<-600 && current < memories.length-1) current++; else if(vpxs>600 && current>0) current--; else { if(diff < -100 && current < memories.length -1) current++; else if(diff > 100 && current > 0) current--; } if(memories[current] && memories[current].type === 'img') setBgToImage(memories[current].src); carousel.style.transform='translateX(0px)'; setTimeout(()=>{ carousel.style.transition=''; render(); },560); });
 }
 
-function canSwipe(){
-  return memories[current].type !== 'timeline';
-}
+function canSwipe(){ return memories[current].type !== 'timeline'; }
 
-/* timeline: counter -> images fly in sequence -> final message */
+/* timeline: counter -> images sequence -> final message */
 function startTimeline(card){
-  if(timelineStarted) return;
-  timelineStarted = true;
+  if(timelineStarted) return; timelineStarted = true;
 
   const startDate = new Date('2024-05-15');
   const today = new Date();
@@ -386,41 +292,14 @@ function startTimeline(card){
 
   // counter first (2s)
   const counterEl = document.getElementById('counter');
-  const dur = 2000;
-  const s = performance.now();
-  const tick = setInterval(()=>{
-    const p = Math.min(1,(performance.now()-s)/dur);
-    if(counterEl) counterEl.innerText = Math.floor(p * totalDays) + ' days';
-    if(p === 1) clearInterval(tick);
-  }, 30);
+  const dur = 2000; const s = performance.now();
+  const tick = setInterval(()=>{ const p = Math.min(1,(performance.now()-s)/dur); if(counterEl) counterEl.innerText = Math.floor(p * totalDays) + ' days'; if(p === 1) clearInterval(tick); }, 30);
 
-  // prepare milestone elements
-  const m1 = document.getElementById('m1');
-  const m2 = document.getElementById('m2');
-  const m3 = document.getElementById('m3');
-  [m1,m2,m3].forEach((el)=>{
-    if(!el) return;
-    el.style.position='absolute';
-    el.style.bottom='-18px';
-    el.style.opacity='0';
-    el.style.transform='translateX(-50%) scale(0.6)';
-    el.style.width='120px';
-    el.style.borderRadius='8px';
-    el.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';
-    el.style.transition='transform 0.9s cubic-bezier(0.22,1,0.36,1), opacity 0.9s ease';
-  });
+  const m1 = document.getElementById('m1'), m2 = document.getElementById('m2'), m3 = document.getElementById('m3');
+  [m1,m2,m3].forEach((el)=>{ if(!el) return; el.style.position='absolute'; el.style.bottom='-18px'; el.style.opacity='0'; el.style.transform='translateX(-50%) scale(0.6)'; el.style.width='120px'; el.style.borderRadius='8px'; el.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)'; el.style.transition='transform 0.9s cubic-bezier(0.22,1,0.36,1), opacity 0.9s ease'; });
 
   function bringCenterThenVanish(el, delay){
-    setTimeout(()=>{
-      if(!el) return;
-      // move to center (translateX -50% relative to its left), move a bit up and scale
-      el.style.transform = 'translateX(-50%) translateY(-20px) scale(1.08)';
-      el.style.opacity = '1';
-      setTimeout(()=>{
-        el.style.transform = 'translateX(-50%) translateY(-80px) scale(0.5)';
-        el.style.opacity = '0';
-      }, 1000);
-    }, delay);
+    setTimeout(()=>{ if(!el) return; el.style.transform='translateX(-50%) translateY(-20px) scale(1.08)'; el.style.opacity='1'; setTimeout(()=>{ el.style.transform='translateX(-50%) translateY(-80px) scale(0.5)'; el.style.opacity='0'; }, 1000); }, delay);
   }
 
   const base = 2300;
@@ -428,20 +307,11 @@ function startTimeline(card){
   bringCenterThenVanish(m2, base + 1400);
   bringCenterThenVanish(m3, base + 2600);
 
-  // final message after sequence
-  setTimeout(()=>{
-    bg.style.transform = 'scale(1.42)';
-    card.innerHTML += `
-      <div style="margin-top:12px;text-align:center">
-        <div class="heart">❤️</div>
-        <div class="final-title">Happy Valentine Day ❤️</div>
-        <div class="final-text">Thank you for being with me.<br/>Till forever.</div>
-      </div>
-    `;
-  }, base + 4200);
+  // final message
+  setTimeout(()=>{ bgImage.style.transform = 'scale(1.42)'; card.innerHTML += `<div style="margin-top:12px;text-align:center"><div class="heart">❤️</div><div class="final-title">Happy Valentine Day ❤️</div><div class="final-text">Thank you for being with me.<br/>Till forever.</div></div>`; }, base + 4200);
 }
 
-/* initial background on load: use first memory image so gift sits over it */
+/* initial load: set bg to first memory (so gift sits over correct photo) */
 window.addEventListener('load', ()=>{
   const first = (memories[0] && memories[0].src) ? memories[0].src : 'mem3.jpeg';
   setBgToImage(first);

@@ -13,15 +13,27 @@
     --bg-brightness:0.28; /* darker */
     --bg-blur:20px;       /* slightly stronger blur */
     --card-max-width:420px;
+    --bg-overlay: rgba(0,0,0,0.44); /* overlay darkness */
   }
   html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#000;overflow:hidden}
-  .bg{position:fixed;inset:0;background:#111 center/cover no-repeat;filter:blur(var(--bg-blur)) brightness(var(--bg-brightness));transform:scale(1.18);transition:transform 1.2s ease, background-image 0.8s ease, filter 0.6s ease;z-index:-2}
+  /* bg uses gradient overlay + memory image; JS updates background-image property */
+  .bg{
+    position:fixed;
+    inset:0;
+    background: var(--bg-overlay);
+    background-size:cover;
+    background-position:center;
+    filter: blur(var(--bg-blur));
+    transform:scale(1.18);
+    transition: transform 1.2s ease, background-image 0.8s ease, filter 0.6s ease;
+    z-index:-2;
+  }
 
-/* particles */
+  /* particles */
   .particle{position:fixed;bottom:-60px;font-size:24px;opacity:0.45;filter:blur(2px);pointer-events:none;animation:floatUp linear infinite}
   @keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-120vh)}}
 
-/* gift */
+  /* gift */
   .scene{height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0f17;position:relative}
   .tap-text{position:absolute;top:16vh;color:#fff;font-size:18px;font-weight:600;letter-spacing:0.2px;font-family:Arial,Helvetica,sans-serif;opacity:0.95}
   .box{width:220px;height:220px;cursor:pointer;perspective:900px}
@@ -32,7 +44,7 @@
   .petal{position:absolute;font-size:18px;pointer-events:none;animation:petalFloat linear forwards}
   @keyframes petalFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(-260px) rotate(360deg);opacity:0}}
 
-/* carousel */
+  /* carousel */
   .memory-section{display:none;height:100vh;display:flex;align-items:center;justify-content:center;perspective:1200px}
   .carousel{position:relative;width:100%;max-width:980px;height:520px;display:flex;align-items:center;justify-content:center;overflow:visible}
   .card{
@@ -50,7 +62,7 @@
   .date{font-family:'Playfair Display',serif;font-weight:700;margin-top:6px}
   .caption{font-family:'Dancing Script',cursive;font-size:20px;margin-top:4px;white-space:pre-line;color:#222;line-height:1.18}
 
-/* timeline */
+  /* timeline */
   .timeline-wrapper{position:relative;margin-top:12px}
   .timeline{width:0%;height:6px;background:linear-gradient(90deg,var(--accent),#fff,var(--accent));border-radius:10px;transition:width 3s ease}
   .milestone{position:absolute;width:140px;left:50%;transform:translateX(-50%) scale(0.7);bottom:-90px;opacity:0;transition:opacity 0.8s ease, transform 0.8s ease}
@@ -125,18 +137,11 @@ function releasePetals(){
 }
 
 function openBox(){
-  // hide the tap text quickly
   tapText.style.opacity = '0';
-  // small anticipation shake
   giftBox.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:420,easing:'ease',iterations:1});
-  // flip lid
   setTimeout(()=>{ lid.style.transform = 'rotateX(-120deg)'; }, 420);
-  // hide lid after flip so bouquet is visible (and ensure lid no longer blocks)
   setTimeout(()=>{ lid.style.display = 'none'; }, 900);
-  // show flower (make visible and raise)
   setTimeout(()=>{ flower.style.opacity = '1'; flower.style.bottom = '28px'; releasePetals(); }, 950);
-
-  // show memories after a short delay
   setTimeout(()=>{
     document.getElementById('giftScene').style.display = 'none';
     document.getElementById('memorySection').style.display = 'flex';
@@ -148,7 +153,7 @@ function openBox(){
 giftBox.addEventListener('click', openBox);
 giftBox.addEventListener('keydown', e=>{ if(e.key==='Enter') openBox(); });
 
-/* memories content */
+/* memories */
 const memories = [
   {
     type:'img',
@@ -190,13 +195,25 @@ That’s what matters.`
   { type:'timeline' }
 ];
 
-/* carousel engine */
 let current = 0;
 const carousel = document.getElementById('carousel');
 const bg = document.getElementById('bg');
 
+/* ensure background uses current memory image with gradient overlay */
+function setBgToImage(src){
+  // overlay darkens the image; keep cover and center
+  const overlay = 'linear-gradient(rgba(0,0,0,0.44), rgba(0,0,0,0.44))';
+  bg.style.backgroundImage = `${overlay}, url(${src})`;
+  bg.style.backgroundSize = 'cover';
+  bg.style.backgroundPosition = 'center';
+  // keep blur via CSS filter
+}
+
+/* init and render */
 function initCarousel(){
-  updateBG();
+  // set bg to current memory before anything
+  const initial = (memories[current] && memories[current].src) ? memories[current].src : 'mem3.jpeg';
+  setBgToImage(initial);
   render();
   setupSwipe();
 }
@@ -208,7 +225,6 @@ function render(){
     card.className = 'card';
     const offset = i - current;
 
-    // positioning + depth
     const tx = offset * 360;
     const scale = offset === 0 ? 1 : 0.82;
     const rotateY = offset * 10;
@@ -229,27 +245,19 @@ function render(){
 
     carousel.appendChild(card);
 
-    // start timeline when timeline card is centered
+    // if this card is the centered image, set background to its src
+    if(offset === 0 && m.type === 'img'){
+      setBgToImage(m.src);
+    }
+
+    // start timeline when center
     if(m.type === 'timeline' && i === current && !timelineStarted){
       setTimeout(()=>startTimeline(card), 80);
     }
   });
-
-  updateBG();
 }
 
-function updateBG(){
-  const m = memories[current];
-  if(m && m.type === 'img' && m.src){
-    bg.style.backgroundImage = `url(${m.src})`;
-    bg.style.filter = `blur(var(--bg-blur)) brightness(var(--bg-brightness))`;
-  } else {
-    bg.style.backgroundImage = `url(mem3.jpeg)`;
-    bg.style.filter = `blur(var(--bg-blur)) brightness(var(--bg-brightness))`;
-  }
-}
-
-/* swipe (touch + mouse) with inertia feel */
+/* swipe */
 let startX = 0;
 let lastX = 0;
 let lastTime = 0;
@@ -261,7 +269,6 @@ function setupSwipe(){
   if(bound) return;
   bound = true;
 
-  // touch
   document.addEventListener('touchstart', (e)=>{
     if(!canSwipe()) return;
     isDown = true;
@@ -297,6 +304,10 @@ function setupSwipe(){
       else if(diff > 100 && current > 0) current--;
     }
 
+    // after updating current, update background to new memory image (if img) before render
+    if(memories[current] && memories[current].type === 'img'){
+      setBgToImage(memories[current].src);
+    }
     carousel.style.transform = 'translateX(0px)';
     setTimeout(()=>{ carousel.style.transition = ''; render(); }, 560);
   }, {passive:true});
@@ -337,6 +348,9 @@ function setupSwipe(){
       else if(diff > 100 && current > 0) current--;
     }
 
+    if(memories[current] && memories[current].type === 'img'){
+      setBgToImage(memories[current].src);
+    }
     carousel.style.transform = 'translateX(0px)';
     setTimeout(()=>{ carousel.style.transition = ''; render(); }, 560);
   });
@@ -346,7 +360,7 @@ function canSwipe(){
   return memories[current].type !== 'timeline';
 }
 
-/* timeline: show total days first, then bring final1, final2, final3 forward one by one, then final message */
+/* timeline: counter -> images fly in sequence -> final message */
 function startTimeline(card){
   if(timelineStarted) return;
   timelineStarted = true;
@@ -359,7 +373,7 @@ function startTimeline(card){
     <div class="date">15 May 2024 → Today</div>
     <div class="timeline-wrapper">
       <div class="timeline" id="line"></div>
-      <div style="position:relative;height:160px;">
+      <div style="position:relative;height:180px;">
         <img src="final1.jpeg" id="m1" class="milestone" style="left:20%;"/>
         <img src="final2.jpeg" id="m2" class="milestone" style="left:50%;"/>
         <img src="final3.jpeg" id="m3" class="milestone" style="left:80%;"/>
@@ -368,10 +382,9 @@ function startTimeline(card){
     <div class="counter" id="counter">0 days</div>
   `;
 
-  // animate bar
   setTimeout(()=>{ const L=document.getElementById('line'); if(L) L.style.width='100%'; }, 500);
 
-  // show counter quickly (duration 2s)
+  // counter first (2s)
   const counterEl = document.getElementById('counter');
   const dur = 2000;
   const s = performance.now();
@@ -381,28 +394,10 @@ function startTimeline(card){
     if(p === 1) clearInterval(tick);
   }, 30);
 
-  // sequence: bring each final image to front center, zoom & fade out, order: final1 -> final2 -> final3
+  // prepare milestone elements
   const m1 = document.getElementById('m1');
   const m2 = document.getElementById('m2');
   const m3 = document.getElementById('m3');
-
-  // helper to animate a milestone to center and vanish
-  function showAndVanish(el, delay){
-    setTimeout(()=>{
-      if(!el) return;
-      el.style.transition = 'transform 0.9s cubic-bezier(0.22,1,0.36,1), opacity 0.9s ease';
-      // bring to center scale up
-      el.style.transform = 'translateX(-50%) translateY(-30px) scale(1.12)';
-      el.style.opacity = '1';
-      // then vanish
-      setTimeout(()=>{
-        el.style.transform = 'translateX(-50%) translateY(-80px) scale(0.6)';
-        el.style.opacity = '0';
-      }, 900);
-    }, delay);
-  }
-
-  // initial setup positions & opacity
   [m1,m2,m3].forEach((el)=>{
     if(!el) return;
     el.style.position='absolute';
@@ -412,20 +407,30 @@ function startTimeline(card){
     el.style.width='120px';
     el.style.borderRadius='8px';
     el.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';
+    el.style.transition='transform 0.9s cubic-bezier(0.22,1,0.36,1), opacity 0.9s ease';
   });
 
-  // timing:
-  // show counter completes at ~2s, then small delay then sequence
-  const base = 2300;
-  showAndVanish(m1, base + 200);   // final1
-  showAndVanish(m2, base + 1400);  // final2
-  showAndVanish(m3, base + 2600);  // final3
+  function bringCenterThenVanish(el, delay){
+    setTimeout(()=>{
+      if(!el) return;
+      // move to center (translateX -50% relative to its left), move a bit up and scale
+      el.style.transform = 'translateX(-50%) translateY(-20px) scale(1.08)';
+      el.style.opacity = '1';
+      setTimeout(()=>{
+        el.style.transform = 'translateX(-50%) translateY(-80px) scale(0.5)';
+        el.style.opacity = '0';
+      }, 1000);
+    }, delay);
+  }
 
-  // final reveal (message) after sequence
+  const base = 2300;
+  bringCenterThenVanish(m1, base + 200);
+  bringCenterThenVanish(m2, base + 1400);
+  bringCenterThenVanish(m3, base + 2600);
+
+  // final message after sequence
   setTimeout(()=>{
-    // background zoom
     bg.style.transform = 'scale(1.42)';
-    // remove timeline visuals and show final message centered
     card.innerHTML += `
       <div style="margin-top:12px;text-align:center">
         <div class="heart">❤️</div>
@@ -436,11 +441,10 @@ function startTimeline(card){
   }, base + 4200);
 }
 
-/* initial setup */
+/* initial background on load: use first memory image so gift sits over it */
 window.addEventListener('load', ()=>{
-  // set background to first memory by default (dark + blur applied via CSS variables)
   const first = (memories[0] && memories[0].src) ? memories[0].src : 'mem3.jpeg';
-  bg.style.backgroundImage = `url(${first})`;
+  setBgToImage(first);
 });
 </script>
 </body>

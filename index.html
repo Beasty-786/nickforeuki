@@ -10,36 +10,23 @@
 <style>
   :root{
     --accent:#ff4f81;
-    --bg-overlay: rgba(0,0,0,0.44);
+    --bg-overlay-rgba: rgba(0,0,0,0.46);
     --bg-blur: 20px;
     --card-max-width:420px;
   }
   html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#000;overflow:hidden}
 
-/* BG: image element + overlay via ::after */
+/* BG area: uses CSS background-image (gradient + photo) */
 .bg{
   position:fixed;
   inset:0;
   z-index:-2;
-  overflow:hidden;
-}
-.bg img{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
+  background-color:#000;
+  background-size:cover;
+  background-position:center;
   transform:scale(1.12);
   filter: blur(var(--bg-blur)) brightness(0.9);
-  transition: opacity 0.6s ease, transform 1.2s ease;
-  opacity:1;
-}
-.bg::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:var(--bg-overlay);
-  pointer-events:none;
+  transition: background 600ms ease, transform 1.2s ease, filter 600ms ease;
 }
 
 /* particles */
@@ -89,10 +76,7 @@
 </head>
 <body>
 
-<!-- Background container with real <img> -->
-<div class="bg" id="bg">
-  <img id="bgImage" src="" alt="background">
-</div>
+<div class="bg" id="bg"></div>
 
 <!-- Gift -->
 <div class="scene" id="giftScene">
@@ -120,7 +104,7 @@
 const timelineIndex = 4;
 let timelineStarted = false;
 
-/* particle spawn */
+/* particles */
 function spawnParticle(){
   const el = document.createElement('div'); el.className='particle';
   el.innerText = Math.random()>0.5 ? '❤️' : '🌹';
@@ -137,7 +121,7 @@ const giftBox = document.getElementById('giftBox');
 const lid = document.getElementById('lid');
 const flower = document.getElementById('flower');
 const tapText = document.getElementById('tapText');
-const bgImage = document.getElementById('bgImage');
+const bgEl = document.getElementById('bg');
 
 function releasePetals(){
   const body = document.querySelector('.box-body');
@@ -181,30 +165,20 @@ const memories = [
 let current = 0;
 const carousel = document.getElementById('carousel');
 
-/* Robust background setter using <img> */
+/* Reliable background setter via element background (gradient + url) */
 function setBgToImage(src){
   if(!src) return;
-  // preload image then fade
-  const temp = new Image();
-  temp.src = src;
-  temp.onload = ()=> {
-    // fade out current
-    bgImage.style.opacity = '0';
-    setTimeout(()=>{
-      bgImage.src = src;
-      // small delay so browser switches src then fade in
-      setTimeout(()=>{ bgImage.style.opacity = '1'; }, 80);
-    }, 160);
-  };
-  temp.onerror = ()=> {
-    // fallback: keep existing bg or use mem3
-    console.warn('bg image failed to load:', src);
-  };
+  // Build stacked background: gradient overlay on top of photo
+  const overlay = 'linear-gradient(rgba(0,0,0,0.46), rgba(0,0,0,0.46))';
+  // Set background property directly
+  bgEl.style.background = `${overlay}, url("${src}") center / cover no-repeat`;
+  // force repaint for some browsers:
+  void bgEl.offsetWidth;
 }
 
 /* init & render */
 function initCarousel(){
-  // ensure bg uses current memory image before rendering cards
+  // set bg to current memory before rendering
   const initial = (memories[current] && memories[current].src) ? memories[current].src : 'mem3.jpeg';
   setBgToImage(initial);
   render();
@@ -290,7 +264,6 @@ function startTimeline(card){
 
   setTimeout(()=>{ const L=document.getElementById('line'); if(L) L.style.width='100%'; }, 500);
 
-  // counter first (2s)
   const counterEl = document.getElementById('counter');
   const dur = 2000; const s = performance.now();
   const tick = setInterval(()=>{ const p = Math.min(1,(performance.now()-s)/dur); if(counterEl) counterEl.innerText = Math.floor(p * totalDays) + ' days'; if(p === 1) clearInterval(tick); }, 30);
@@ -307,11 +280,10 @@ function startTimeline(card){
   bringCenterThenVanish(m2, base + 1400);
   bringCenterThenVanish(m3, base + 2600);
 
-  // final message
-  setTimeout(()=>{ bgImage.style.transform = 'scale(1.42)'; card.innerHTML += `<div style="margin-top:12px;text-align:center"><div class="heart">❤️</div><div class="final-title">Happy Valentine Day ❤️</div><div class="final-text">Thank you for being with me.<br/>Till forever.</div></div>`; }, base + 4200);
+  setTimeout(()=>{ bgEl.style.transform = 'scale(1.42)'; card.innerHTML += `<div style="margin-top:12px;text-align:center"><div class="heart">❤️</div><div class="final-title">Happy Valentine Day ❤️</div><div class="final-text">Thank you for being with me.<br/>Till forever.</div></div>`; }, base + 4200);
 }
 
-/* initial load: set bg to first memory (so gift sits over correct photo) */
+/* initial: set bg to first memory so gift sits over correct photo */
 window.addEventListener('load', ()=>{
   const first = (memories[0] && memories[0].src) ? memories[0].src : 'mem3.jpeg';
   setBgToImage(first);
